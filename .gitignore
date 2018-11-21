@@ -10,3 +10,7 @@ bin/
 \.classpath
 
 venv/
+import/result.csv
+
+import/result.json
+import/data\.json
