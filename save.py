@@ -9,23 +9,8 @@ def linesJson(filename):
   return linenumber
 
 def saveJson(filename, entries, begin=0, nval=1):
-	print ("[saveJson] filename: %s" % filename)
-	print ("[saveJson] entries:")
-	print (entries)
-	length=len(entries)
-	print ("[saveJson] number of entries: %d" % length)
-	if length < 1:
-		print ("[saveJson] ERROR no entries")
-		return
-	if not filename.endswith(".json"):
-		print ("[saveJson] ERROR only .json files are supported")
-		return
 	of=open(filename,"r")
-	#if (of < 0):
-	#	print ("[saveJson] ERROR no file %s" % filename)
-	#	return
 	filelen=linesJson(filename)
-	print ("[saveJson] number lines: %d" % filelen)
 
 	# read header ...
 	headerlen=1

@@ -6,15 +6,12 @@ class DateRule():
         self.pattern = pattern
         self.separator = separator
 
-    def validate(self, values):
-        list = []
-        for i in values:
-            try:
-                datetime.datetime.strptime(i.replace(self.separator, "-"), self.pattern)
-                list.append(True)
-            except ValueError:
-                list.append(False)
-        return list
+    def validate(self, value):
+        try:
+            datetime.datetime.strptime(value.replace(self.separator, "-"), self.pattern)
+            return True
+        except ValueError:
+            return False
 
     def getLabel(self):
         return self.label

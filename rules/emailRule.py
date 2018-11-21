@@ -3,17 +3,14 @@ class EmailRule():
         self.label = label
         self.domain = domain
 
-    def validate(self, values):
-        list = []
-        for i in values:
-            if i[(len(i)-len(self.domain)):] == self.domain:
-                if "@" in i:
-                    list.append(True)
-                else:
-                    list.append(False)
+    def validate(self, value):
+        if value[(len(value)-len(self.domain)):] == self.domain:
+            if "@" in value:
+                return True
             else:
-                list.append(False)
-        return list
+                return False
+        else:
+            return False
 
     def getLabel(self):
         return self.label

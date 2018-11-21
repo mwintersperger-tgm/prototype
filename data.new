@@ -5,26 +5,23 @@
 		{
 			"firstname":{"value":"Alexander", "validated":"False"},
 			"lastname":{"value":"Kramreiter", "validated":"False"},
-			"employeeid":{"value":135790, "validated":"False"},
 			"income":{"value":700, "validated":"False"},
 			"birthday":{"value":"09-22-1999", "validated":"False"},
 			"email":{"value":"alexander.Kramreiter@chello.at", "validated":"False"}
 		},
 		{
-			"firstname":{"value":"Michael", "validated":"False"},
-			"lastname":{"value":"Wintersperger", "validated":"False"},
-			"employeeid":{"value":135791, "validated":"False"},
-			"income":{"value":900, "validated":"False"},
-			"birthday":{"value":"22-09-1999", "validated":"False"},
-			"email":{"value":"michael.wintersperger@chello.at", "validated":"False"}
+			"firstname":{"value":Michael, "validated":"True"},
+			"lastname":{"value":Wintersperger, "validated":"True"},
+			"income":{"value":0, "validated":"False"},
+			"birthday":{"value":22-09-1999, "validated":"True"},
+			"email":{"value":michael.wintersperger@chello.at, "validated":"True"}
 		},
 		{
-			{aaaa},
-			{aaaa},
-			{aaaa},
-			{aaaa},
-			{aaaa},
-			{aaaa}
+			"firstname":{"value":"Mich'ael", "validated":"False"},
+			"lastname":{"value":"Wintersperger", "validated":"False"},
+			"income":{"value":200, "validated":"False"},
+			"birthday":{"value":"09-22-1999", "validated":"False"},
+			"email":{"value":"michael.wintersperger@chello.com", "validated":"False"}
 		}
 	]
 }

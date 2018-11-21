@@ -5,14 +5,11 @@ class PatternRule():
         self.label = label
         self.pattern = re.compile(pattern)
 
-    def validate(self, values):
-        list = []
-        for i in values:
-            if self.pattern.match(i) is not None:
-                list.append(True)
-            else:
-                list.append(False)
-        return list
+    def validate(self, value):
+        if self.pattern.match(value) is not None:
+            return True
+        else:
+            return False
 
     def getLabel(self):
         return self.label

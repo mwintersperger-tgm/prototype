@@ -4,14 +4,11 @@ class NumberRule():
         self.upper = upper
         self.lower = lower
 
-    def validate(self, values):
-        list = []
-        for i in values:
-            if i > self.lower and i < self.upper:
-                list.append(True)
-            else:
-                list.append(False)
-        return list
+    def validate(self, value):
+        if int(value) > self.lower and int(value) < self.upper:
+            return True
+        else:
+            return False
 
     def getLabel(self):
         return self.label

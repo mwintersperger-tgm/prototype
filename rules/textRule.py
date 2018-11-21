@@ -5,23 +5,20 @@ class TextRule():
         self.maxlength = maxlength
         self.letters = letters
 
-    def validate(self, values):
-        list = []
+    def validate(self, value):
         contains = True
-        for i in values:
-            if len(i) > self.maxlength and len(i) < self.minlength:
-                list.append(False)
-            else:
-                for j in self.letters:
-                    if j in i:
-                        contains = False
-                    else:
-                        contains = True
-                if contains:
-                    list.append(True)
+        if len(value) > self.maxlength and len(value) < self.minlength:
+            list.append(False)
+        else:
+            for j in self.letters:
+                if j in value:
+                    contains = False
                 else:
-                    list.append(False)
-        return list
+                    contains = True
+            if contains:
+                return True
+            else:
+                return False
 
     def getLabel(self):
         return self.label
