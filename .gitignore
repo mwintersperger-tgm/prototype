@@ -8,3 +8,7 @@ bin/
 \.project
 
 \.classpath
+
+import/result.csv
+
+import/result.json
