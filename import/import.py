@@ -2,11 +2,17 @@ import csv
 import json
 from builtins import staticmethod
 
-
 class ImportCls(object):
     @staticmethod
     def forward(dataset):
-        # TODO: forward to our internal data structure
+        print("putting out output")
+        with open("data.json", "a") as outfile:
+            try:
+                print("writing now")
+                outfile.write(json.dumps(dataset) + "\n")
+                outfile.close()
+            except Exception as err:
+                print(str(err))
         pass
 
     @staticmethod
