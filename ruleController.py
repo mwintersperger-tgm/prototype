@@ -25,6 +25,9 @@ class RuleController():
     def createListRule(self, label="list", list=[]):
         self.data_holder.append({'label':label, "rule":"list", 'list':list})
 
+    def createDependencyRule(self, label="dependency", list=[], offset=1):
+        self.data_holder.append({'label':label, "rule":"dependency", 'list':list, 'offset':offset})
+
     def createRulesFile(self,name):
         with open(name, 'w') as outfile:
             json.dump(self.rule_data, outfile)

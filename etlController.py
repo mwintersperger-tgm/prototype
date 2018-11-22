@@ -4,6 +4,7 @@ from rules.emailRule import EmailRule
 from rules.dateRule import DateRule
 from rules.patternRule import PatternRule
 from rules.listRule import ListRule
+from rules.dependencyRule import DependencyRule
 
 import json
 import os
@@ -31,6 +32,9 @@ class ETLController():
 
             elif self.rulesData["rules"][len(self.rules)]["rule"] == "list":
                 self.rules.append(ListRule(self.rulesData["rules"][i]["label"], self.rulesData["rules"][i]["list"]))
+
+            elif self.rulesData["rules"][len(self.rules)]["rule"] == "dependency":
+                self.rules.append(DependencyRule(self.rulesData["rules"][i]["label"], self.rulesData["rules"][i]["list"], self.rulesData["rules"][i]["offset"]))
 
     def setRules(self,filename,rule):
         of = open(filename, "r")
@@ -103,16 +107,19 @@ class ETLController():
             ll = valuelen - 2
             j = 0
             while j < ll:
-                rawValue = of.readline()
-                print("------------")
-                print(rawValue)
-                value = rawValue[(rawValue.find('value"')+8):(rawValue.find('"validated')-3)]
-                print("------------")
-                print(value)
-                print(str(self.rules[j].validate(value)))
-                combinedValue = rawValue[(rawValue.find('"')):(rawValue.find(':'))]+':{"value":"'+value+'", "validated":"'+str(self.rules[j].validate(value))+'"}'
-                print(combinedValue)
-                print("------------")
+                print(str(self.rules[j])[str(self.rules[j]).find('.')+1:str(self.rules[j]).find('R')])
+                if (str(self.rules[j])[str(self.rules[j]).find('.')+1:str(self.rules[j]).find('R')] == "dependency"):
+                    print(of.tell())
+                    of.seek(of.tell()+self.rules[j].getOffset(),1)
+                    print(of.tell())
+                    rawValue = of.readline()
+                    value = rawValue[(rawValue.find('value"')+8):(rawValue.find('"validated')-3)]
+                    combinedValue = rawValue[(rawValue.find('"')):(rawValue.find(':'))]+':{"value":"'+str(self.rules[j].validate(value))+'"}'
+                    of.seek(of.tell()+self.rules[j].getOffset()*-1,1)
+                else:
+                    rawValue = of.readline()
+                    value = rawValue[(rawValue.find('value"')+8):(rawValue.find('"validated')-3)]
+                    combinedValue = rawValue[(rawValue.find('"')):(rawValue.find(':'))]+':{"value":"'+value+'", "validated":"'+str(self.rules[j].validate(value))+'"}'
                 if (j < ll-1): combinedValue += ","
                 nf.write("			%s\n" % (combinedValue))
                 j += 1
@@ -133,5 +140,5 @@ class ETLController():
         of.close()
         nf.close()
 
-        os.remove(filename)
-        os.rename("new_"+filename, filename)
+        #os.remove(filename)
+        #os.rename("new_"+filename, filename)

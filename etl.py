@@ -13,10 +13,11 @@ def main():
     rules = RuleController()
     rules.createTextRule("firstname",0,100,[ ",", "'"])
     rules.createTextRule("lastname",0,15,[])
-    rules.createNumberRule("income",300,5000)
+    rules.createNumberRule("age",14,22)
     rules.createDateRule("birthday","%d-%m-%Y","/")
     rules.createEmailRule("email","at")
     rules.createListRule("job",["Programmierer","Anwalt"])
+    rules.createDependencyRule("income",["Programmierer","Anwalt"],-1)
     rules.createRulesFile(args.rule)
 
     ETL = ETLController()
