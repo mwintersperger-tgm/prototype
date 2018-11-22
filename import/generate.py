@@ -14,7 +14,7 @@ parser.add_argument("-csv", "--writecsv", help="use this option to generate a CS
 
 parser.add_argument("-l", "--lines",
 					help="Sets the amount of lines generated",
-                    type=int, required=False, default=1, nargs='?', const=True)
+                    type=int, required=False, default=-1, nargs='?', const=True)
 
 parser.add_argument("-csvn", "--csvname",
 					help="Sets the name and location of the generated csv file",
@@ -72,12 +72,15 @@ if __name__ == '__main__':
     delete = false
     jsonloc = args.jsonname
     csvloc = args.csvname
+    lines = columns['lines']
+    if args.lines > 0:
+        lines = args.lines
     with open(csvloc, "a") as csvfile:
         if ccsv:
             csvfile.truncate(0)
             w = csv.writer(csvfile, delimiter=delim)
         linecount = 0
-        for i in range(0,columns['lines']):
+        for i in range(0,lines):
             newres = {}
             for x in columns['param']:
                 newres[x['propname']] = generate(x['generator'])
