@@ -1,23 +1,17 @@
-import csv
 import json
-from builtins import staticmethod
+import csv
 
-class ImportCls(object):
+
+class ExportCls(object):
     @staticmethod
-    def forward(dataset):
-        with open("data.json", "a") as outfile:
-            try:
-                outfile.write(json.dumps(dataset) + "\n")
-                outfile.close()
-                print(json.dumps(dataset))
-            except Exception as err:
-                print(str(err))
+    def fetch(dataset):
+        # TODO: receive data to export
         pass
 
     @staticmethod
-    def importcsv():
+    def exportCsv():
         cfg = {}
-        with open("inconfig.json") as file:
+        with open("outconfig.json") as file:
             cfg = json.load(file)
         if isinstance(cfg['delimiter'], int):
             cfg['delimiter'] = chr(cfg['delimiter'])
@@ -45,4 +39,4 @@ class ImportCls(object):
 
 
 if __name__ == '__main__':
-    ImportCls.importcsv()
+    pass

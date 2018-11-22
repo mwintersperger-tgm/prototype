@@ -27,7 +27,7 @@ def generate(generator):
 
 if __name__ == '__main__':
     colums = {}
-    with open("param.json") as file:
+    with open("../resources/param.json") as file:
         columns = json.load(file)
     print(json.dumps(columns))
     result = []
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     delim = columns['delimiter']
     if isinstance(delim, int):
         delim = chr(delim)
-    with open("result.csv", "w") as csvfile:
+    with open("../resources/data/result.csv", "w") as csvfile:
         if ccsv:
             csvfile.truncate(0)
             w = csv.writer(csvfile, delimiter=delim)
@@ -59,6 +59,6 @@ if __name__ == '__main__':
 
         # print(json.dumps(result))
     if cjson:
-        with open("result.json","w") as file:
+        with open("../resources/data/result.json","w") as file:
             file.truncate(0)
             file.write(json.dumps(result))
