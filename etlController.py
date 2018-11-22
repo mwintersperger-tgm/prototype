@@ -5,7 +5,7 @@ from rules.dateRule import DateRule
 from rules.patternRule import PatternRule
 
 import json
-
+import os
 
 class ETLController():
     def loadRules(self, data):
@@ -33,11 +33,33 @@ class ETLController():
                 self.rules.append(
                     PatternRule(self.rulesData["rules"][i]["label"], self.rulesData["rules"][i]["pattern"]))
 
+    def setRules(self,filename,rule):
+        of = open(filename, "r")
+        newfile = "new_"+filename
+        nf = open(newfile, "w")
+        filelen = self.linesJson(filename)
+        line = of.readline()
+        nf.write(line)
+        newRule = '"rules":"%s",' % rule
+        nf.write("	%s\n" % (newRule))
+        of.readline()
+        done = 0
+        while done < filelen-2:
+            line = of.readline()
+            nf.write(line)
+            done += 1
+        of.close()
+        nf.close()
+
+        os.remove(filename)
+        os.rename("new_"+filename, filename)
+
     def getRules(self,filename):
         f = open(filename, "r")
         f.readline()
         raw = f.readline()
         rule = raw[(raw.find(':"')+2):raw.find('",')]
+        f.close()
         return rule
 
     def linesJson(self, filename):
@@ -51,37 +73,29 @@ class ETLController():
         nval = int(nval)
         of = open(filename, "r")
         filelen = self.linesJson(filename)
-
         # read header ...
         headerlen = 1
         line = of.readline()
         while line.find("[") is -1:
             line = of.readline()
             headerlen += 1
-
         # read number of values
         valuelen = len(self.rules)
-
         # with the the { and }, a value contains valulen + 2 lines
         valuelen += 2
-
         # now we have to read all lines until begin (=first changed value)
         begin_of_change = headerlen + begin * valuelen
         # go back to beginning of source file
         of.seek(0)
-
         # and write the lines until begin
         # to newfile because they are unchanged ...
-
-        newfile = filename.replace(".json", ".new")
+        newfile = "new_"+filename
         nf = open(newfile, "w")
-
         done = 0
         while done < begin_of_change:
             line = of.readline()
             nf.write(line)
             done += 1
-
         # now we write the changed values instead of the original ones ...
         i = 0
         while i < nval:
@@ -92,7 +106,7 @@ class ETLController():
             while j < ll:
                 rawValue = of.readline()
                 value = rawValue[(rawValue.find('value"')+8):(rawValue.find('"validated')-3)]
-                combinedValue = rawValue[(rawValue.find('"')):(rawValue.find(':'))]+':{"value":'+value+', "validated":"'+str(self.rules[j].validate(value))+'"}'
+                combinedValue = rawValue[(rawValue.find('"')):(rawValue.find(':'))]+':{"value":"'+value+'", "validated":"'+str(self.rules[j].validate(value))+'"}'
                 if (j < ll-1): combinedValue += ","
                 nf.write("			%s\n" % (combinedValue))
                 j += 1
@@ -104,13 +118,14 @@ class ETLController():
             else:
                 nf.write("		},\n")
             done += 3
-
         line = of.readline()
         # now we write the unchanged rest ...
         while line:
             nf.write(line)
             line = of.readline()
             done += 1
-
         of.close()
         nf.close()
+
+        os.remove(filename)
+        os.rename("new_"+filename, filename)
