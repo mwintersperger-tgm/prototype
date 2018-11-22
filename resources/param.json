@@ -1,11 +1,19 @@
 {
-	"createjson":true,
-	"createcsv":true,
+	"createjson":false,
+	"createcsv":false,
 	"lines":25000,
 	"delimiter":"|",
 	"param":[
 		{
+			"propname":"uid",
+			"generator":"randchar8"
+		},
+		{
 			"propname":"firstname",
+			"generator":"name"
+		},
+		{
+			"propname":"secondname",
 			"generator":"name"
 		},
 		{
@@ -13,16 +21,8 @@
 			"generator":"name"
 		},
 		{
-			"propname":"uid",
-			"generator":"randchar8"
-		},
-		{
 			"propname":"income",
 			"generator":"randint4"
-		},
-		{
-			"propname":"secondname",
-			"generator":"name"
 		},
 		{
 			"propname":"id0",

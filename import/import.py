@@ -2,10 +2,11 @@ import csv
 import json
 from builtins import staticmethod
 
+
 class ImportCls(object):
     @staticmethod
     def forward(dataset):
-        with open("data.json", "a") as outfile:
+        with open("../resources/data/data.json", "a") as outfile:
             try:
                 outfile.write(json.dumps(dataset) + "\n")
                 outfile.close()
@@ -17,7 +18,7 @@ class ImportCls(object):
     @staticmethod
     def importcsv():
         cfg = {}
-        with open("inconfig.json") as file:
+        with open("../resources/inconfig.json") as file:
             cfg = json.load(file)
         if isinstance(cfg['delimiter'], int):
             cfg['delimiter'] = chr(cfg['delimiter'])

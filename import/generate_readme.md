@@ -51,7 +51,11 @@ Right now the following methods of generating values are available:
 '''
 
 ### args
+args always overwrite param.json
 
 - -json / --writejson: creates the JSON output, independent of the preset in param.json
 - -csv / --writecsv: creates the CSV output, independent of the preset in param.json
-- -h / --help: spells the stuff in the line above out for you
+- -l / --lines: set the amount of lines generated
+- -csvn / --csvname: sets the name and location of the generated csv file
+- jsonn / --jsonname: sets the name and location of the generated json file
+- -h / --help: spells the stuff in the lines above out for you
