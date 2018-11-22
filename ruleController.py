@@ -22,6 +22,9 @@ class RuleController():
     def createEmailRule(self, label="email", domain="at" ):
         self.data_holder.append({'label':label, "rule":"email", 'domain':domain})
 
+    def createListRule(self, label="list", list=[]):
+        self.data_holder.append({'label':label, "rule":"list", 'list':list})
+
     def createRulesFile(self,name):
         with open(name, 'w') as outfile:
             json.dump(self.rule_data, outfile)

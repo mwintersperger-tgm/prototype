@@ -1,27 +1,30 @@
 {
-	"rules":"test.json",
+	"rules":"rules.json",
 	"values":
 	[
 		{
 			"firstname":{"value":"Alexander", "validated":"False"},
 			"lastname":{"value":"Kramreiter", "validated":"False"},
-			"income":{"value":700, "validated":"False"},
+			"income":{"value":2500, "validated":"False"},
 			"birthday":{"value":"09-22-1999", "validated":"False"},
-			"email":{"value":"alexander.Kramreiter@chello.at", "validated":"False"}
+			"email":{"value":"alexander.Kramreiter@chello.at", "validated":"False"},
+			"job":{"value":"Programmierer", "validated":"False"}
 		},
 		{
-			"firstname":{"value":"Michael", "validated":"False"},
-			"lastname":{"value":"Wintersperger", "validated":"False"},
-			"income":{"value":900, "validated":"False"},
-			"birthday":{"value":"22-09-1999", "validated":"False"},
-			"email":{"value":"michael.wintersperger@chello.at", "validated":"False"}
+			"firstname":{"value":"Michael", "validated":"True"},
+			"lastname":{"value":"Wintersperger", "validated":"True"},
+			"income":{"value":"2000", "validated":"True"},
+			"birthday":{"value":"22-09-1999", "validated":"True"},
+			"email":{"value":"michael.wintersperger@chello.at", "validated":"True"},
+			"job":{"value":"Anwalt", "validated":"True"}
 		},
 		{
 			"firstname":{"value":"Mich'ael", "validated":"False"},
-			"lastname":{"value":"Wintersperger", "validated":"False"},
-			"income":{"value":200, "validated":"False"},
+			"lastname":{"value":"WinterspergerWintersperger", "validated":"False"},
+			"income":{"value":"200", "validated":"False"},
 			"birthday":{"value":"09-22-1999", "validated":"False"},
-			"email":{"value":"michael.wintersperger@chello.com", "validated":"False"}
+			"email":{"value":"michael.wintersperger@chello.com", "validated":"False"},
+			"job":{"value":"Kassierer", "validated":"False"}
 		}
 	]
 }

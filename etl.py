@@ -12,10 +12,11 @@ def main():
     args = parser.parse_args()
     rules = RuleController()
     rules.createTextRule("firstname",0,100,[ ",", "'"])
-    rules.createTextRule("lastname",0,100,[])
-    rules.createNumberRule("income",200,5000)
+    rules.createTextRule("lastname",0,15,[])
+    rules.createNumberRule("income",300,5000)
     rules.createDateRule("birthday","%d-%m-%Y","/")
     rules.createEmailRule("email","at")
+    rules.createListRule("job",["Programmierer","Anwalt"])
     rules.createRulesFile(args.rule)
 
     ETL = ETLController()
