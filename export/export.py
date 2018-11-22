@@ -63,6 +63,6 @@ def test():
 
 
 if __name__ == '__main__':
-    # runs test(). May be removed later because it's not really necessary
+    # runs test(). May be removed later
     test()
     pass

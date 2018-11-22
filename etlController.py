@@ -34,7 +34,7 @@ class ETLController():
 
     def setRules(self,filename,rule):
         of = open(filename, "r")
-        newfile = "new_"+filename
+        newfile = filename
         nf = open(newfile, "w")
         filelen = self.linesJson(filename)
         line = of.readline()
@@ -50,8 +50,8 @@ class ETLController():
         of.close()
         nf.close()
 
-        os.remove(filename)
-        os.rename("new_"+filename, filename)
+        #os.remove(filename)
+        #os.rename("new_"+filename, filename)
 
     def getRules(self,filename):
         f = open(filename, "r")

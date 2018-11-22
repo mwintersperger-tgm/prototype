@@ -1,10 +1,10 @@
 import json
 import csv
 import os
+import argparse
 from random import randint
 true = True
 false = False
-import argparse
 
 parser = argparse.ArgumentParser()
 
