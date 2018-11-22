@@ -1,5 +1,7 @@
 import json
 import csv
+import ast
+from pandas import DataFrame
 
 
 class ExportCls(object):
@@ -9,34 +11,41 @@ class ExportCls(object):
         pass
 
     @staticmethod
-    def exportCsv():
-        cfg = {}
-        with open("outconfig.json") as file:
-            cfg = json.load(file)
-        if isinstance(cfg['delimiter'], int):
-            cfg['delimiter'] = chr(cfg['delimiter'])
-        with open(cfg['file']) as file:
-            colnames = []
-            read = csv.reader(file, delimiter=cfg['delimiter'])
-            count = 0
-            firstline = True
-            for row in read:
-                if firstline:
-                    firstline = False
-                    colnames.append(row)
-                    print(colnames)
-                else:
-                    temp = row
-                    res = {}
-                    if row:
-                        for x in range(0,len(temp)):
-                            res[colnames[0][x]] = {}
-                            res[colnames[0][x]]["value"] = temp[x]
-                            res[colnames[0][x]]["validated"] = False
-                        ImportCls.forward(res)
-                        count+=1
-            print(str(count) + " lines imported")
+    def exportExcel(data):
+        tmp = {}
+        firstset = True
+        for x in data:
+            if firstset:
+                for y in x.keys():
+                    tmp[y] = []
+                firstset = False
+            for y in tmp.keys():
+                try:
+                    tmp[y].append(x[y]["value"])
+                except Exception as err:
+                    print(str(err))
+
+        print(tmp)
+        frame = DataFrame(tmp)
+        frame.to_excel("../resources/data/test.xlsx", sheet_name="test", index=False)
+
+def test():
+    tmp = [];
+    inc = 0;
+    with open("../resources/data/data.json","r") as file:
+        for x in range(0, 1000):
+            try:
+                y = file.readline()
+                print(y)
+                tmp.append(json.loads(y))
+                inc+=1
+                print(str(inc) + " lines read")
+            except Exception as err:
+                print(err)
+    print("File to export:\n" + str(tmp))
+    ExportCls.exportExcel(tmp)
 
 
 if __name__ == '__main__':
+    test()
     pass
