@@ -3,6 +3,7 @@ from rules.numberRule import NumberRule
 from rules.emailRule import EmailRule
 from rules.dateRule import DateRule
 from rules.patternRule import PatternRule
+from rules.listRule import ListRule
 
 import json
 import os
@@ -14,24 +15,22 @@ class ETLController():
         self.rules = []
         for i in range(len(self.rulesData["rules"])):
             if self.rulesData["rules"][i]["rule"] == "text":
-                self.rules.append(TextRule(self.rulesData["rules"][i]["label"], self.rulesData["rules"][i]["minlength"],
-                                           self.rulesData["rules"][i]["maxlength"],
-                                           self.rulesData["rules"][i]["letters"]))
+                self.rules.append(TextRule(self.rulesData["rules"][i]["label"], self.rulesData["rules"][i]["minlength"], self.rulesData["rules"][i]["maxlength"], self.rulesData["rules"][i]["letters"]))
 
             elif self.rulesData["rules"][len(self.rules)]["rule"] == "number":
-                self.rules.append(NumberRule(self.rulesData["rules"][i]["label"], self.rulesData["rules"][i]["upper"],
-                                             self.rulesData["rules"][i]["lower"]))
+                self.rules.append(NumberRule(self.rulesData["rules"][i]["label"], self.rulesData["rules"][i]["upper"], self.rulesData["rules"][i]["lower"]))
 
             elif self.rulesData["rules"][len(self.rules)]["rule"] == "email":
                 self.rules.append(EmailRule(self.rulesData["rules"][i]["label"], self.rulesData["rules"][i]["domain"]))
 
             elif self.rulesData["rules"][len(self.rules)]["rule"] == "date":
-                self.rules.append(DateRule(self.rulesData["rules"][i]["label"], self.rulesData["rules"][i]["pattern"],
-                                           self.rulesData["rules"][i]["separator"]))
+                self.rules.append(DateRule(self.rulesData["rules"][i]["label"], self.rulesData["rules"][i]["pattern"], self.rulesData["rules"][i]["separator"]))
 
             elif self.rulesData["rules"][len(self.rules)]["rule"] == "pattern":
-                self.rules.append(
-                    PatternRule(self.rulesData["rules"][i]["label"], self.rulesData["rules"][i]["pattern"]))
+                self.rules.append(PatternRule(self.rulesData["rules"][i]["label"], self.rulesData["rules"][i]["pattern"]))
+
+            elif self.rulesData["rules"][len(self.rules)]["rule"] == "list":
+                self.rules.append(ListRule(self.rulesData["rules"][i]["label"], self.rulesData["rules"][i]["list"]))
 
     def setRules(self,filename,rule):
         of = open(filename, "r")
@@ -105,8 +104,15 @@ class ETLController():
             j = 0
             while j < ll:
                 rawValue = of.readline()
+                print("------------")
+                print(rawValue)
                 value = rawValue[(rawValue.find('value"')+8):(rawValue.find('"validated')-3)]
+                print("------------")
+                print(value)
+                print(str(self.rules[j].validate(value)))
                 combinedValue = rawValue[(rawValue.find('"')):(rawValue.find(':'))]+':{"value":"'+value+'", "validated":"'+str(self.rules[j].validate(value))+'"}'
+                print(combinedValue)
+                print("------------")
                 if (j < ll-1): combinedValue += ","
                 nf.write("			%s\n" % (combinedValue))
                 j += 1

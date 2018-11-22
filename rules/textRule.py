@@ -6,19 +6,13 @@ class TextRule():
         self.letters = letters
 
     def validate(self, value):
-        contains = True
-        if len(value) > self.maxlength and len(value) < self.minlength:
-            list.append(False)
-        else:
+        if len(value) < self.maxlength and len(value) > self.minlength:
             for j in self.letters:
                 if j in value:
-                    contains = False
-                else:
-                    contains = True
-            if contains:
-                return True
-            else:
-                return False
+                    return False
+            return True
+        else:
+            return False
 
     def getLabel(self):
         return self.label
