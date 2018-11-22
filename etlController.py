@@ -58,6 +58,10 @@ class ETLController():
         os.rename("new_"+filename, filename)
 
     def getRules(self,filename):
+        with open("%s" % filename) as f:
+            fileData = json.loads(f.readline())
+            print(fileData)
+
         f = open(filename, "r")
         f.readline()
         raw = f.readline()

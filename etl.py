@@ -11,7 +11,7 @@ def main():
 
     args = parser.parse_args()
     rules = RuleController()
-    rules.createTextRule("firstname",0,100,[ ",", "'"])
+    rules.createTextRule("firstname",0,100,[',', '^'])
     rules.createTextRule("lastname",0,15,[])
     rules.createNumberRule("age",14,22)
     rules.createDateRule("birthday","%d-%m-%Y","/")
@@ -23,7 +23,7 @@ def main():
     ETL = ETLController()
     ETL.setRules(args.data, args.rule)
     ETL.loadRules(args.data)
-    ETL.runRules(args.data,args.start,args.span)
+    #ETL.runRules(args.data,args.start,args.span)
 
 if __name__ == '__main__':
     main()

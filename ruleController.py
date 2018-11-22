@@ -3,32 +3,29 @@ import json
 class RuleController():
     def __init__(self):
         #create a dict
-        self.rule_data = {"rules":[]}
+        self.rule_data = '{"rules":[\n'
         # turn it into a list so you can append
-        self.data_holder = self.rule_data["rules"]
 
     def createTextRule(self, label="text",minlength=0,maxlength=100,letters=[]):
-        self.data_holder.append({'label':label, "rule":"text", 'minlength':minlength, 'maxlength':maxlength, 'letters':letters})
-
-    def createIdRule(self, label="id"):
-        self.data_holder.append({'label':label, "rule":"id"})
+        self.rule_data+='{"label":"%s", "rule":"text", "minlength":"%s", "maxlength":"%s", "letters":"%s"},\n' %(label,minlength,maxlength,letters)
 
     def createNumberRule(self, label="number",lower=-100000,upper=100000):
-        self.data_holder.append({'label':label, "rule":"number", 'lower':lower, 'upper':upper})
+        self.rule_data+='{"label":"%s", "rule":"number", "lower":"%d", "upper":"%d"},\n' % (label,lower,upper)
 
     def createDateRule(self, label="date", pattern="%d-%m-%Y", separator="/" ):
-        self.data_holder.append({'label':label, "rule":"date", 'pattern':pattern, 'separator':separator})
+        self.rule_data+='{"label":"%s", "rule":"date", "pattern":"%s", "separator":"%s"},\n' %(label,pattern,separator)
 
     def createEmailRule(self, label="email", domain="at" ):
-        self.data_holder.append({'label':label, "rule":"email", 'domain':domain})
+        self.rule_data+='{"label":"%s", "rule":"email", "domain":"%s"},\n' % (label,domain)
 
     def createListRule(self, label="list", list=[]):
-        self.data_holder.append({'label':label, "rule":"list", 'list':list})
+        self.rule_data+='{"label":"%s", "rule":"list", "list":"%s"},\n' % (label,list)
 
     def createDependencyRule(self, label="dependency", list=[], offset=1):
-        self.data_holder.append({'label':label, "rule":"dependency", 'list':list, 'offset':offset})
+        self.rule_data+='{"label":"%s", "rule":"dependency", "list":"%s", "offset":"%d"},\n' %(label,list,offset)
 
     def createRulesFile(self,name):
+        self.rule_data = self.rule_data[:len(self.rule_data)-2]+'\n]\n}'
         with open(name, 'w') as outfile:
-            json.dump(self.rule_data, outfile)
+            outfile.write(self.rule_data)
         outfile.close()
