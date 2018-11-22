@@ -7,11 +7,23 @@ from pandas import DataFrame
 class ExportCls(object):
     @staticmethod
     def fetch(dataset):
+        """
+        I don't know where this is going or how I plan to receive data
+        :param dataset:
+        :return:
+        """
         # TODO: receive data to export
         pass
 
     @staticmethod
     def exportExcel(data):
+        """
+        Exports the given data, which should be a list of dictionaries (expect errors if it isn't one)
+        as an excel file. The first row will feature the row names as bold text, all other rows will
+        be filled with the data received from one of the dicts in the list.
+        :param data: list of dicts
+        :return:
+        """
         tmp = {}
         firstset = True
         for x in data:
@@ -30,6 +42,10 @@ class ExportCls(object):
         frame.to_excel("../resources/data/test.xlsx", sheet_name="test", index=False)
 
 def test():
+    """
+    Tests the functionality of exportExcel()
+    :return:
+    """
     tmp = [];
     inc = 0;
     with open("../resources/data/data.json","r") as file:
@@ -47,5 +63,6 @@ def test():
 
 
 if __name__ == '__main__':
+    # runs test(). May be removed later because it's not really necessary
     test()
     pass

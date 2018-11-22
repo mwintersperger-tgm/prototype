@@ -3,8 +3,24 @@ import csv
 from random import randint
 true = True
 false = False
+import argparse
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument("-json", "--writejson", help="use this option to generate a JSON file in resources/data",action='store_true')
+
+parser.add_argument("-csv", "--writecsv", help="use this option to generate a CSV file in resources/data",action='store_true')
+
+args = parser.parse_args()
+
 
 def generate(generator):
+    """
+    Generates a value based on the given generator, which has to be a string
+    Read the generate_readme for further information
+    :param generator: string
+    :return:
+    """
     if generator.startswith("name"):
         str = ""
         str += chr(randint(65, 90))
@@ -32,7 +48,11 @@ if __name__ == '__main__':
     print(json.dumps(columns))
     result = []
     ccsv = columns['createcsv']
+    if args.writecsv:
+        ccsv = True
     cjson = columns['createjson']
+    if args.writejson:
+        cjson = True
     delim = columns['delimiter']
     if isinstance(delim, int):
         delim = chr(delim)

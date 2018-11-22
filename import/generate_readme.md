@@ -49,3 +49,9 @@ Right now the following methods of generating values are available:
 	]
 }
 '''
+
+### args
+
+- -json / --writejson: creates the JSON output, independent of the preset in param.json
+- -csv / --writecsv: creates the CSV output, independent of the preset in param.json
+- -h / --help: spells the stuff in the line above out for you
