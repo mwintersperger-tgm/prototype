@@ -38,7 +38,7 @@ class ETLController():
                     self.rules.append(ListRule(str(rule["label"]), rule["list"]))
 
                 elif rule["rule"] == "dependency":
-                    self.rules.append(DependencyRule(str(rule["label"]), rule["list"], int(rule["offset"])))
+                    self.rules.append(DependencyRule(str(rule["label"]), rule["list"], rule["depends"]))
 
     def setRules(self,filename,rule):
         newfile = filename[:filename.rfind('/')+1]+"new_"+filename[filename.rfind('/')+1:]
@@ -87,7 +87,11 @@ class ETLController():
                     data=json.loads(of.readline().rstrip(",\n"))
                     curLine+=1
                     for i in range(0,len(self.rules)):
-                        data[self.rules[i].getLabel()]["validated"]=str(self.rules[i].validate(data[self.rules[i].getLabel()]["value"]))
+                        if(str(self.rules[i])[str(self.rules[i]).find('.')+1:str(self.rules[i]).find('R')])=="dependency":
+                            data[self.rules[i].getLabel()]["value"]=str(self.rules[i].validate(data[self.rules[i].getDepends()]["value"]))
+                            data[self.rules[i].getLabel()]["validated"]=True
+                        else:
+                            data[self.rules[i].getLabel()]["validated"]=str(self.rules[i].validate(data[self.rules[i].getLabel()]["value"]))
                     if curLine < filelen:
                         nf.write("%s,\n" % str(data).replace("'","\""))
                     else:

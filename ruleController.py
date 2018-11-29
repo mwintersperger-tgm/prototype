@@ -21,8 +21,8 @@ class RuleController():
     def createListRule(self, label="list", list=[]):
         self.rule_data+='{"label":"%s", "rule":"list", "list":"%s"},\n' % (label,list)
 
-    def createDependencyRule(self, label="dependency", list=[], offset=1):
-        self.rule_data+='{"label":"%s", "rule":"dependency", "list":"%s", "offset":"%d"},\n' %(label,list,offset)
+    def createDependencyRule(self, label="dependency", list=[], depends={}):
+        self.rule_data+='{"label":"%s", "rule":"dependency", "list":"%s", "depends":"%s"},\n' %(label,list,depends)
 
     def createRulesFile(self,name):
         self.rule_data = self.rule_data[:len(self.rule_data)-2]+'\n]\n}'

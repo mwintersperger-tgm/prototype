@@ -120,7 +120,7 @@ def main():
     rules.createRulesFile(args.rule)
 
     ETL = ETLController()
-    ETL.setRules(args.data, args.rule)
+    #ETL.setRules(args.data, args.rule)
     ETL.runRules(args.data,args.start,args.span)
 
 if __name__ == '__main__':

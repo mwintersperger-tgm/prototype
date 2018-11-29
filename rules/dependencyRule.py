@@ -1,8 +1,8 @@
 class DependencyRule():
-    def __init__(self, label, list, offset):
+    def __init__(self, label, list, depends):
         self.label = label
         self.list = list
-        self.offset = offset
+        self.depends = depends
 
     def validate(self, value):
         for i in self.list:
@@ -12,5 +12,5 @@ class DependencyRule():
     def getLabel(self):
         return self.label
 
-    def getOffset(self):
-        return  self.offset
+    def getDepends(self):
+        return self.depends
