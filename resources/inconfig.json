@@ -1,4 +1,5 @@
 {
 	"file":"../resources/data/result.csv",
-	"delimiter":"|"
+	"delimiter":"|",
+	"out":"../resources/data/data.json"
 }
