@@ -5,7 +5,8 @@ class NumberRule():
         self.lower = lower
 
     def validate(self, value):
-        if int(value) > self.lower and int(value) < self.upper:
+        value = int(value)
+        if value > self.lower and value < self.upper:
             return True
         else:
             return False

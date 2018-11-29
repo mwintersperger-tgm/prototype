@@ -4,134 +4,101 @@ from rules.emailRule import EmailRule
 from rules.dateRule import DateRule
 from rules.patternRule import PatternRule
 from rules.listRule import ListRule
+from rules.dependencyRule import DependencyRule
 
 import json
 import os
 
 class ETLController():
     def loadRules(self, data):
-        with open('%s' % self.getRules(data)) as f:
-            self.rulesData = json.load(f)
         self.rules = []
-        for i in range(len(self.rulesData["rules"])):
-            if self.rulesData["rules"][i]["rule"] == "text":
-                self.rules.append(TextRule(self.rulesData["rules"][i]["label"], self.rulesData["rules"][i]["minlength"], self.rulesData["rules"][i]["maxlength"], self.rulesData["rules"][i]["letters"]))
+        rulename = self.getRules(data)
+        filelen = self.linesJson(rulename)
+        with open(rulename, "r") as f:
+            rule={}
+            f.readline()
+            for i in range(1,filelen-2):
+                rule=json.loads(f.readline().rstrip(",\n"))
+                if rule["rule"] == "text":
+                    self.rules.append(TextRule(str(rule["label"]), int(rule["minlength"]), int(rule["maxlength"]), str(["letters"])))
 
-            elif self.rulesData["rules"][len(self.rules)]["rule"] == "number":
-                self.rules.append(NumberRule(self.rulesData["rules"][i]["label"], self.rulesData["rules"][i]["upper"], self.rulesData["rules"][i]["lower"]))
+                elif rule["rule"] == "number":
+                    self.rules.append(NumberRule(str(rule["label"]), int(rule["upper"]), int(rule["lower"])))
 
-            elif self.rulesData["rules"][len(self.rules)]["rule"] == "email":
-                self.rules.append(EmailRule(self.rulesData["rules"][i]["label"], self.rulesData["rules"][i]["domain"]))
+                elif rule["rule"] == "email":
+                    self.rules.append(EmailRule(str(rule["label"]), str(rule["domain"])))
 
-            elif self.rulesData["rules"][len(self.rules)]["rule"] == "date":
-                self.rules.append(DateRule(self.rulesData["rules"][i]["label"], self.rulesData["rules"][i]["pattern"], self.rulesData["rules"][i]["separator"]))
+                elif rule["rule"] == "date":
+                    self.rules.append(DateRule(str(rule["label"]), str(rule["pattern"]), str(rule["separator"])))
 
-            elif self.rulesData["rules"][len(self.rules)]["rule"] == "pattern":
-                self.rules.append(PatternRule(self.rulesData["rules"][i]["label"], self.rulesData["rules"][i]["pattern"]))
+                elif rule["rule"] == "pattern":
+                    self.rules.append(PatternRule(str(rule["label"]), str(rule["pattern"])))
 
-            elif self.rulesData["rules"][len(self.rules)]["rule"] == "list":
-                self.rules.append(ListRule(self.rulesData["rules"][i]["label"], self.rulesData["rules"][i]["list"]))
+                elif rule["rule"] == "list":
+                    self.rules.append(ListRule(str(rule["label"]), rule["list"]))
+
+                elif rule["rule"] == "dependency":
+                    self.rules.append(DependencyRule(str(rule["label"]), rule["list"], rule["depends"]))
 
     def setRules(self,filename,rule):
-        of = open(filename, "r")
-        newfile = filename
-        nf = open(newfile, "w")
+        newfile = filename[:filename.rfind('/')+1]+"new_"+filename[filename.rfind('/')+1:]
         filelen = self.linesJson(filename)
-        line = of.readline()
-        nf.write(line)
-        newRule = '"rules":"%s",' % rule
-        nf.write("	%s\n" % (newRule))
-        of.readline()
-        done = 0
-        while done < filelen-2:
-            line = of.readline()
-            nf.write(line)
-            done += 1
-        of.close()
-        nf.close()
-
-        #os.remove(filename)
-        #os.rename("new_"+filename, filename)
+        with open("%s" % filename,"r") as of:
+            of.readline()
+            with open("%s" % newfile, "w") as nf:
+                line='{"rules":"%s", "values":[\n' % rule
+                nf.write(line)
+                for i in range(1,filelen):
+                    line = of.readline()
+                    nf.write(line)
+        os.remove(filename)
+        os.rename(newfile, filename)
 
     def getRules(self,filename):
-        f = open(filename, "r")
-        f.readline()
-        raw = f.readline()
-        rule = raw[(raw.find(':"')+2):raw.find('",')]
-        f.close()
-        return rule
+        with open("%s" % filename, "r") as f:
+            rule = f.readline()
+            rule = rule[10:-14]
+            return rule
 
     def linesJson(self, filename):
-        f = open(filename, "r")
-        linenumber = sum(1 for line in f)
-        f.close()
-        return linenumber
+        num_lines = sum(1 for line in open(filename))
+        return  num_lines
 
-    def runRules(self, filename, begin=0, nval=1):
-        begin = int(begin)
-        nval = int(nval)
-        of = open(filename, "r")
+    def runRules(self, filename, start=0, span=1):
+        self.loadRules(filename)
+        start = int(start)
+        span = int(span)
         filelen = self.linesJson(filename)
-        # read header ...
-        headerlen = 1
-        line = of.readline()
-        while line.find("[") is -1:
-            line = of.readline()
-            headerlen += 1
-        # read number of values
-        valuelen = len(self.rules)
-        # with the the { and }, a value contains valulen + 2 lines
-        valuelen += 2
-        # now we have to read all lines until begin (=first changed value)
-        begin_of_change = headerlen + begin * valuelen
-        # go back to beginning of source file
-        of.seek(0)
-        # and write the lines until begin
-        # to newfile because they are unchanged ...
-        newfile = "new_"+filename
-        nf = open(newfile, "w")
-        done = 0
-        while done < begin_of_change:
-            line = of.readline()
-            nf.write(line)
-            done += 1
-        # now we write the changed values instead of the original ones ...
-        i = 0
-        while i < nval:
-            of.readline()
-            nf.write("		{\n")
-            ll = valuelen - 2
-            j = 0
-            while j < ll:
-                rawValue = of.readline()
-                print("------------")
-                print(rawValue)
-                value = rawValue[(rawValue.find('value"')+8):(rawValue.find('"validated')-3)]
-                print("------------")
-                print(value)
-                print(str(self.rules[j].validate(value)))
-                combinedValue = rawValue[(rawValue.find('"')):(rawValue.find(':'))]+':{"value":"'+value+'", "validated":"'+str(self.rules[j].validate(value))+'"}'
-                print(combinedValue)
-                print("------------")
-                if (j < ll-1): combinedValue += ","
-                nf.write("			%s\n" % (combinedValue))
-                j += 1
-                done += 1
-            of.readline()
-            i += 1
-            if done > filelen - 1 - valuelen:  # could be last value ...
-                nf.write("		}\n")
-            else:
-                nf.write("		},\n")
-            done += 3
-        line = of.readline()
-        # now we write the unchanged rest ...
-        while line:
-            nf.write(line)
-            line = of.readline()
-            done += 1
-        of.close()
-        nf.close()
+        curLine=0
 
+        newfile = filename[:filename.rfind('/')+1]+"new_"+filename[filename.rfind('/')+1:]
+        with open("%s" % filename,"r") as of:
+            line= of.readline()
+            curLine+=1
+            with open("%s" % newfile, "w") as nf:
+                nf.write("%s" % line)
+                #first we write until we hit the changed lines
+                for i in range(0,start-1):
+                    line = of.readline()
+                    curLine+=1
+                    nf.write(line)
+                #then we validate the changed lines
+                for i in range(0,span):
+                    data=json.loads(of.readline().rstrip(",\n"))
+                    curLine+=1
+                    for i in range(0,len(self.rules)):
+                        if(str(self.rules[i])[str(self.rules[i]).find('.')+1:str(self.rules[i]).find('R')])=="dependency":
+                            data[self.rules[i].getLabel()]["value"]=str(self.rules[i].validate(data[self.rules[i].getDepends()]["value"]))
+                            data[self.rules[i].getLabel()]["validated"]=True
+                        else:
+                            data[self.rules[i].getLabel()]["validated"]=str(self.rules[i].validate(data[self.rules[i].getLabel()]["value"]))
+                    if curLine < filelen:
+                        nf.write("%s,\n" % str(data).replace("'","\""))
+                    else:
+                        nf.write("%s\n" % str(data))
+                # now we write the unchanged rest ...
+                while line:
+                    nf.write(line)
+                    line = of.readline()
         os.remove(filename)
-        os.rename("new_"+filename, filename)
+        os.rename(newfile, filename)

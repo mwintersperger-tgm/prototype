@@ -7,6 +7,7 @@ class DateRule():
         self.separator = separator
 
     def validate(self, value):
+        value = str(value)
         try:
             datetime.datetime.strptime(value.replace(self.separator, "-"), self.pattern)
             return True

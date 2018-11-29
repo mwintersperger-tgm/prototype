@@ -6,6 +6,7 @@ class TextRule():
         self.letters = letters
 
     def validate(self, value):
+        value = str(value)
         if len(value) < self.maxlength and len(value) > self.minlength:
             for j in self.letters:
                 if j in value:

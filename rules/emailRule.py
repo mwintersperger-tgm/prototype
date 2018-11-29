@@ -4,6 +4,7 @@ class EmailRule():
         self.domain = domain
 
     def validate(self, value):
+        value = str(value)
         if value[(len(value)-len(self.domain)):] == self.domain:
             if "@" in value:
                 return True
