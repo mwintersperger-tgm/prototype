@@ -23,7 +23,7 @@ Right now the following methods of generating values are available:
 
 ### example param.json
 
-'''
+```
 {
 	"createjson":true,
 	"createcsv":true,
@@ -48,7 +48,7 @@ Right now the following methods of generating values are available:
 		}
 	]
 }
-'''
+```
 
 ### args
 args always overwrite param.json
