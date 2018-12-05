@@ -43,7 +43,14 @@ def generate(generator):
     elif generator.startswith("randchar"):
         str = ""
         for x in range(0,int(generator[8:])):
-            str += chr(randint(48,122))
+            num = randint(0,2)
+            if num == 2:
+                str += chr(randint(48,57))
+            elif num == 1:
+                str += chr(randint(65,90))
+            else:
+                str += chr(randint(95,122))
+
         return str
     elif generator.startswith("randint"):
         str = "1"

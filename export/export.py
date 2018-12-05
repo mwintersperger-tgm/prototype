@@ -74,12 +74,12 @@ def test():
     tmp = [];
     inc = 0;
     with open("../resources/data/data.json", "r") as file:
-        for x in range(0, 1000):
+        for x in range(0, 1001):
             try:
-                y = file.read()
-                print(y)
-                if y[len(y) - 1] == ',':
-                    y = y[:-1]
+                y = file.readline()
+                print("'" + y[len(y) - 2:len(y) - 1] + "' == '" + ",'")
+                if y[len(y) - 2:len(y) - 1] == ",":
+                    y = y[:len(y)-2]
                 tmp.append(json.loads(y))
                 inc+=1
                 print(str(inc) + " lines read")
