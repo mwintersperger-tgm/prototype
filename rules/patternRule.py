@@ -6,10 +6,10 @@ class PatternRule():
         self.pattern = re.compile(pattern)
 
     def validate(self, value):
+        validated = False
         if self.pattern.match(value) is not None:
-            return True
-        else:
-            return False
+            validated = True
+        return validated
 
     def getLabel(self):
         return self.label

@@ -8,11 +8,13 @@ class DateRule():
 
     def validate(self, value):
         value = str(value)
+        validated = False
         try:
             datetime.datetime.strptime(value.replace(self.separator, "-"), self.pattern)
-            return True
+            validated = True
         except ValueError:
-            return False
+            validated = False
+        return validated
 
     def getLabel(self):
         return self.label
