@@ -8,9 +8,10 @@ import shutil
 def resource():
     print("running setup")
     try:
-        os.stat("temp")
+        os.stat("/temp")
     except Exception as err:
         str(err)
-        os.mkdir("temp")
-    yield "temp"
-    shutil.rmtree("temp")
+        os.mkdir("/temp")
+    yield "/temp"
+    shutil.rmtree("/temp")
+

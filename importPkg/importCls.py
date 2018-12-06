@@ -19,7 +19,7 @@ class ImportCls(object):
     def startFile(file):
         with open(file, "w") as outfile:
             outfile.truncate(0)
-            outfile.write('{"rules":"", "values":[\n')
+            outfile.write('{"rules":"", "cc":"", "values":[\n')
 
     @staticmethod
     def endFile(file):
