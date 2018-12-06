@@ -10,9 +10,13 @@ from rules.blankRule import BlankRule
 import json
 import os
 
-class ETLController():
-    """
 
+class ETLController:
+    """
+    This class handles the whole validation process of Datamigration.
+
+    It allows you to change the rule file applied to a data file, change the CC of a data file,
+    load the rules applied to a data file and validate data.
     """
     def loadRules(self, filename):
         """
@@ -27,11 +31,10 @@ class ETLController():
         rulename = self.getRule(filename)
         filelen = self.fileLength(rulename)
         with open(rulename, "r") as f:
-            rule={}
             f.readline()
             # we ignore the 'header' and the closing line
-            for i in range(1,filelen-1):
-                rule=json.loads(f.readline().rstrip(",\n"))
+            for i in range(1, filelen-1):
+                rule = json.loads(f.readline().rstrip(",\n"))
                 if rule["rule"] == "text":
                     self.rules.append(TextRule(str(rule["label"]), int(rule["minlength"]), int(rule["maxlength"]), str(rule["letters"])))
 
@@ -54,7 +57,8 @@ class ETLController():
                     self.rules.append(DependencyRule(str(rule["label"]), rule["dict"], rule["depends"]))
                 elif rule["rule"] == "blank":
                     self.rules.append(BlankRule(str(rule["label"])))
-    def setCC(self,filename,cc):
+
+    def setCC(self, filename, cc):
         """
         This function changes the cc of the data file
         :param filename: the name/path of the data file
@@ -67,23 +71,23 @@ class ETLController():
         # the newfile has the same path as the old one but its name gets a "new_" added to it
         newfile = filename[:filename.rfind('/')+1]+"new_"+filename[filename.rfind('/')+1:]
         filelen = self.fileLength(filename)
-        with open("%s" % filename,"r") as of:
+        with open("%s" % filename, "r") as of:
             temp = of.readline()
             rule = temp[10:temp.find(",")-1]
             with open("%s" % newfile, "w") as nf:
                 # write the header with the new rules
-                line='{"rules":"%s", "cc":"%s", "values":[\n' % (rule, cc)
+                line = '{"rules":"%s", "cc":"%s", "values":[\n' % (rule, cc)
                 nf.write(line)
 
-                #write the rest
-                for i in range(1,filelen):
+                # write the rest
+                for i in range(1, filelen):
                     line = of.readline()
                     nf.write(line)
         # remove the old file and rename the new file to the old one
         os.remove(filename)
         os.rename(newfile, filename)
 
-    def setRules(self,filename,rule):
+    def setRules(self, filename, rule):
         """
         This function changes the rule file applied to a data file
         :param filename: the name/path of the data file
@@ -96,16 +100,16 @@ class ETLController():
         # the newfile has the same path as the old one but its name gets a "new_" added to it
         newfile = filename[:filename.rfind('/')+1]+"new_"+filename[filename.rfind('/')+1:]
         filelen = self.fileLength(filename)
-        with open("%s" % filename,"r") as of:
+        with open("%s" % filename, "r") as of:
             temp = of.readline()
             cc = temp[temp.find("cc")+5:temp.rfind(",")-1]
             with open("%s" % newfile, "w") as nf:
                 # write the header with the new rules
-                line='{"rules":"%s", "cc":"%s", "values":[\n' % (rule, cc)
+                line = '{"rules":"%s", "cc":"%s", "values":[\n' % (rule, cc)
                 nf.write(line)
 
-                #write the rest
-                for i in range(1,filelen):
+                # write the rest
+                for i in range(1, filelen):
                     line = of.readline()
                     nf.write(line)
         # remove the old file and rename the new file to the old one
@@ -122,7 +126,7 @@ class ETLController():
         """
         with open("%s" % filename, "r") as f:
             rule = f.readline()
-            rule = rule[10:-rule.find("cc")-2]
+            rule = rule[10:-rule.find("cc")-1]
             return rule
 
     def fileLength(self, filename):
@@ -134,7 +138,7 @@ class ETLController():
         :rtype: integer
         """
         num_lines = sum(1 for line in open(filename))
-        return  num_lines
+        return num_lines
 
     def runRules(self, filename, start=0, span=1):
         """
@@ -151,44 +155,50 @@ class ETLController():
         start = int(start)
         span = int(span)
         filelen = self.fileLength(filename)
+        # if the starting index is higher than possible the index is set to the highest possible index
+        if start > filelen - 3:
+            start = filelen - 3
+        # if the span is longer than possible the span is set to cover the remaining data entries
+        if start + span > filelen - 2:
+            span = filelen - 2 - start
         # this counter is needed to know when the last data entry is written
-        curLine=0
+        curline = 0
 
         # the newfile has the same path as the old one but its name gets a "new_" added to it
         newfile = filename[:filename.rfind('/')+1]+"new_"+filename[filename.rfind('/')+1:]
-        with open("%s" % filename,"r") as of:
-            line= of.readline()
-            curLine+=1
+        with open("%s" % filename, "r") as of:
+            line = of.readline()
+            curline += 1
             with open("%s" % newfile, "w") as nf:
                 nf.write("%s" % line)
-                #first we write until we hit the changed lines
-                for i in range(0,start-1):
+                # first we write until we hit the changed lines
+                for i in range(0, start-1):
                     line = of.readline()
-                    curLine+=1
+                    curline += 1
                     nf.write(line)
-                #then we validate the changed lines
-                for i in range(0,span):
+                # then we validate the changed lines
+                for i in range(0, span):
                     # strip ',\n' from the lines to use them as dictionaries
-                    data=json.loads(of.readline().rstrip(",\n"))
-                    curLine+=1
-                    for i in range(0,len(self.rules)):
+                    data = json.loads(of.readline().rstrip(",\n"))
+                    curline += 1
+                    for j in range(0, len(self.rules)):
                         # dependency rules work different than normal rules so we have to check if the rules is one
-                        if(str(self.rules[i])[str(self.rules[i]).find('.')+1:str(self.rules[i]).find('R')])=="dependency":
+                        if(str(self.rules[j])[str(self.rules[j]).find('.')+1:str(self.rules[j]).find('R')]) == "dependency":
                             # set the value of the dependent data entry depending of the value of the value of the data entry this one depends on
-                            data[self.rules[i].getLabel()]["value"]=str(self.rules[i].validate(data[self.rules[i].getDepends()]["value"]))
+                            data[self.rules[j].getLabel()]["value"] = str(self.rules[i].validate(data[self.rules[j].getDepends()]["value"]))
                             # set validated to True or False depending of the dependency validation
-                            if data[self.rules[i].getLabel()]["value"] == None:
-                                data[self.rules[i].getLabel()]["validated"]=str(False)
+                            if data[self.rules[j].getLabel()]["value"] is None:
+                                data[self.rules[j].getLabel()]["validated"] = str(False)
                             else:
-                                data[self.rules[i].getLabel()]["validated"]=str(True)
+                                data[self.rules[j].getLabel()]["validated"] = str(True)
                         else:
                             # set the validation of the current data entry
-                            data[self.rules[i].getLabel()]["validated"]=str(self.rules[i].validate(data[self.rules[i].getLabel()]["value"]))
+                            data[self.rules[j].getLabel()]["validated"] = str(self.rules[j].validate(data[self.rules[j].getLabel()]["value"]))
                     # add either a ',\n' or a '\' and replace the ' of the dictionary with the " required by json
-                    if curLine < filelen-1:
-                        nf.write("%s,\n" % str(data).replace("'","\""))
+                    if curline < filelen-1:
+                        nf.write("%s,\n" % str(data).replace("'", "\""))
                     else:
-                        nf.write("%s\n" % str(data).replace("'","\""))
+                        nf.write("%s\n" % str(data).replace("'", "\""))
                 # now we write the unchanged rest ...
                 while line:
                     line = of.readline()

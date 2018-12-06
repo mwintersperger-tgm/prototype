@@ -1,6 +1,7 @@
-import json
 
-class RuleController():
+
+class RuleController:
+
     def initRules(self):
         """
         This function creates/resets the String the other functions append to
@@ -9,7 +10,7 @@ class RuleController():
         # create the 'header' of the file
         self.rule_data = '{"rules":[\n'
 
-    def createTextRule(self, label="text",minlength=0,maxlength=100,letters=[]):
+    def createTextRule(self, label="text", minlength=0, maxlength=100, letters=[]):
         """
         This function appends a line defining a textRule to the list
         :param label: the label of the data entry this rule applies to
@@ -22,9 +23,9 @@ class RuleController():
         :type: list
         :return: void
         """
-        self.rule_data+='{"label":"%s", "rule":"text", "minlength":"%s", "maxlength":"%s", "letters":"%s"},\n' %(label,minlength,maxlength,letters)
+        self.rule_data += '{"label":"%s", "rule":"text", "minlength":"%s", "maxlength":"%s", "letters":"%s"},\n' %(label,minlength,maxlength,letters)
 
-    def createNumberRule(self, label="number",lower=-100000,upper=100000):
+    def createNumberRule(self, label="number", lower=-100000, upper=100000):
         """
         This function appends a line defining a numberRule to the list
         :param label: the label of the data entry this rule applies to
@@ -35,7 +36,7 @@ class RuleController():
         :type: integer
         :return: void
         """
-        self.rule_data+='{"label":"%s", "rule":"number", "lower":"%d", "upper":"%d"},\n' % (label,lower,upper)
+        self.rule_data += '{"label":"%s", "rule":"number", "lower":"%d", "upper":"%d"},\n' % (label, lower, upper)
 
     def createDateRule(self, label="date", pattern="%d-%m-%Y", separator="/" ):
         """
@@ -48,9 +49,9 @@ class RuleController():
         :type: string
         :return: void
         """
-        self.rule_data+='{"label":"%s", "rule":"date", "pattern":"%s", "separator":"%s"},\n' %(label,pattern,separator)
+        self.rule_data += '{"label":"%s", "rule":"date", "pattern":"%s", "separator":"%s"},\n' %(label, pattern, separator)
 
-    def createEmailRule(self, label="email", domain="at" ):
+    def createEmailRule(self, label="email", domain="at"):
         """
         This function appends a line defining a emailRule to the list
         :param label: the label of the data entry this rule applies to
@@ -59,7 +60,7 @@ class RuleController():
         :type: string
         :return: void
         """
-        self.rule_data+='{"label":"%s", "rule":"email", "domain":"%s"},\n' % (label,domain)
+        self.rule_data += '{"label":"%s", "rule":"email", "domain":"%s"},\n' % (label, domain)
 
     def createListRule(self, label="list", list=[]):
         """
@@ -70,7 +71,7 @@ class RuleController():
         :type: string
         :return: void
         """
-        self.rule_data+='{"label":"%s", "rule":"list", "list":"%s"},\n' % (label,list)
+        self.rule_data += '{"label":"%s", "rule":"list", "list":"%s"},\n' % (label, list)
 
     def createDependencyRule(self, label="dependency", dict={}, depends=""):
         """
@@ -83,7 +84,7 @@ class RuleController():
         :type: string
         :return: void
         """
-        self.rule_data+='{"label":"%s", "rule":"dependency", "dict":%s, "depends":"%s"},\n' %(label,str(dict).replace("'","\""),depends)
+        self.rule_data += '{"label":"%s", "rule":"dependency", "dict":%s, "depends":"%s"},\n' %(label,str(dict).replace("'","\""), depends)
 
     def createBlankRule(self, label="blank"):
         """
@@ -92,16 +93,16 @@ class RuleController():
         :type: string
         :return: void
         """
-        self.rule_data+='{"label":"%s", "rule":"blank"},\n' %(label)
+        self.rule_data += '{"label":"%s", "rule":"blank"},\n' % label
 
     def createRulesFile(self, rulename):
         """
         This function persists the rules by writing them into a file
-        :param label: the label/path of the new rule file
+        :param rulename: the label/path of the new rule file
         :type: string
         :return: void
         """
-        #remove the '},' of the last added rules and add the proper end of the file
+        # remove the '},' of the last added rules and add the proper end of the file
         self.rule_data = self.rule_data[:len(self.rule_data)-2]+'\n]}'
         with open(rulename, 'w') as outfile:
             outfile.write(self.rule_data)
