@@ -1,4 +1,3 @@
-import sys
 import unittest
 from rules.textRule import TextRule
 from rules.numberRule import NumberRule
@@ -8,199 +7,200 @@ from rules.patternRule import PatternRule
 from rules.listRule import ListRule
 from rules.dependencyRule import DependencyRule
 
+
 class RulesValidation(unittest.TestCase):
 
-    '''
-    Test the textRule
-    '''
+    """
+    Test the textrule
+    """
 
     def test_textRule(self):
-        textRule = TextRule("test",0,10,[])
-        self.assertTrue(textRule.validate("test"))
+        textrule = TextRule("test", 0, 10, [])
+        self.assertTrue(textrule.validate("test"))
 
     def test_textRuleTooShort(self):
-        textRule = TextRule("test",10,10,[])
-        self.assertFalse(textRule.validate("test"))
+        textrule = TextRule("test", 10, 10, [])
+        self.assertFalse(textrule.validate("test"))
 
     def test_textRuleTooLong(self):
-        textRule = TextRule("test",0,1,[])
-        self.assertFalse(textRule.validate("test"))
+        textrule = TextRule("test", 0, 1, [])
+        self.assertFalse(textrule.validate("test"))
 
     def test_textRuleForbiddenLetter(self):
-        textRule = TextRule("test",0,10,["t"])
-        self.assertFalse(textRule.validate("test"))
+        textrule = TextRule("test", 0, 10, ["t"])
+        self.assertFalse(textrule.validate("test"))
 
     def test_textRuleInt(self):
-        textRule = TextRule("test",0,10,["t"])
-        self.assertTrue(textRule.validate(10))
+        textrule = TextRule("test", 0, 10, ["t"])
+        self.assertTrue(textrule.validate(10))
 
     def test_textRuleNone(self):
-        textRule = TextRule("test",0,10,["t"])
-        self.assertTrue(textRule.validate(None))
+        textrule = TextRule("test", 0, 10, ["t"])
+        self.assertTrue(textrule.validate(None))
 
     def test_textRuleGetLabel(self):
-        textRule = TextRule("test",0,10,["t"])
-        self.assertEquals(textRule.getLabel(),"test")
+        textrule = TextRule("test", 0, 10, ["t"])
+        self.assertEquals(textrule.getLabel(), "test")
 
-    '''
-    Test the numberRule
-    '''
+    """
+    Test the number rule
+    """
 
     def test_numberRule(self):
-        numberRule = NumberRule("test",10,0)
-        self.assertTrue(numberRule.validate(5))
+        numberrule = NumberRule("test", 10, 0)
+        self.assertTrue(numberrule.validate(5))
 
     def test_numberRuleTooLow(self):
-        numberRule = NumberRule("test",10,10)
-        self.assertFalse(numberRule.validate(5))
+        numberrule = NumberRule("test", 10, 10)
+        self.assertFalse(numberrule.validate(5))
 
     def test_numberRuleTooHigh(self):
-        numberRule = NumberRule("test",5,0)
-        self.assertFalse(numberRule.validate(10))
+        numberrule = NumberRule("test", 5, 0)
+        self.assertFalse(numberrule.validate(10))
 
     def test_numberRuleString(self):
-        numberRule = NumberRule("test",10,0)
-        self.assertFalse(numberRule.validate("a"))
+        numberrule = NumberRule("test", 10, 0)
+        self.assertFalse(numberrule.validate("a"))
 
     def test_numberRuleBoolean(self):
-        numberRule = NumberRule("test",10,0)
-        self.assertFalse(numberRule.validate(True))
+        numberrule = NumberRule("test", 10, 0)
+        self.assertFalse(numberrule.validate(True))
 
     def test_numberRuleNone(self):
-        numberRule = NumberRule("test",10,0)
-        self.assertFalse(numberRule.validate(None))
+        numberrule = NumberRule("test", 10, 0)
+        self.assertFalse(numberrule.validate(None))
 
     def test_numberRuleGetLabel(self):
-        numberRule = NumberRule("test",0,10)
-        self.assertEquals(numberRule.getLabel(),"test")
+        numberrule = NumberRule("test", 0, 10)
+        self.assertEquals(numberrule.getLabel(), "test")
 
-    '''
-    Test the dateRule
-    '''
+    """
+    Test the date rule
+    """
 
     def test_dateRule(self):
-        dateRule = DateRule("test", "%d-%m-%Y", "-" )
-        self.assertTrue(dateRule.validate("22-09-2018"))
+        daterule = DateRule("test", "%d-%m-%Y", "-")
+        self.assertTrue(daterule.validate("22-09-2018"))
 
     def test_dateRuleWrongPattern(self):
-        dateRule = DateRule("test", "%d-%m-%Y", "-" )
-        self.assertFalse(dateRule.validate("09-22-2018"))
+        daterule = DateRule("test", "%d-%m-%Y", "-")
+        self.assertFalse(daterule.validate("09-22-2018"))
 
     def test_dateRuleWrongSeperator(self):
-        dateRule = DateRule("test", "%d-%m-%Y", "-" )
-        self.assertFalse(dateRule.validate("22/09/2018"))
+        daterule = DateRule("test", "%d-%m-%Y", "-")
+        self.assertFalse(daterule.validate("22/09/2018"))
 
     def test_dateRuleInt(self):
-        dateRule = DateRule("test", "%d-%m-%Y", "-" )
-        self.assertFalse(dateRule.validate("22092018"))
+        daterule = DateRule("test", "%d-%m-%Y", "-")
+        self.assertFalse(daterule.validate("22092018"))
 
     def test_dateRuleBool(self):
-        dateRule = DateRule("test", "%d-%m-%Y", "-" )
-        self.assertFalse(dateRule.validate(True))
+        daterule = DateRule("test", "%d-%m-%Y", "-")
+        self.assertFalse(daterule.validate(True))
 
     def test_dateRuleNone(self):
-        dateRule = DateRule("test", "%d-%m-%Y", "-" )
-        self.assertFalse(dateRule.validate(None))
+        daterule = DateRule("test", "%d-%m-%Y", "-")
+        self.assertFalse(daterule.validate(None))
 
     def test_dateRuleGetLabel(self):
-        dateRule = DateRule("test", "%d-%m-%Y", "-" )
-        self.assertEquals(dateRule.getLabel(),"test")
+        daterule = DateRule("test", "%d-%m-%Y", "-")
+        self.assertEquals(daterule.getLabel(), "test")
 
-    '''
-    Test the emailRule
-    '''
+    """
+    Test the email rule
+    """
 
     def test_emailRule(self):
-        emailRule = EmailRule("test", "at" )
-        self.assertTrue(emailRule.validate("michael.wintersperger@chello.at"))
+        emailrule = EmailRule("test", "at")
+        self.assertTrue(emailrule.validate("michael.wintersperger@chello.at"))
 
     def test_emailRuleWrongDomain(self):
-        emailRule = EmailRule("test", "at" )
-        self.assertFalse(emailRule.validate("michael.wintersperger@chello.com"))
+        emailrule = EmailRule("test", "at")
+        self.assertFalse(emailrule.validate("michael.wintersperger@chello.com"))
 
     def test_emailRuleInvalidEmail(self):
-        emailRule = EmailRule("test", "at" )
-        self.assertFalse(emailRule.validate("michael.wintersperger.chello.at"))
+        emailrule = EmailRule("test", "at")
+        self.assertFalse(emailrule.validate("michael.wintersperger.chello.at"))
 
     def test_emailRuleInt(self):
-        emailRule = EmailRule("test", "at" )
-        self.assertFalse(emailRule.validate(10))
+        emailrule = EmailRule("test", "at")
+        self.assertFalse(emailrule.validate(10))
 
     def test_emailRuleBool(self):
-        emailRule = EmailRule("test", "at" )
-        self.assertFalse(emailRule.validate(True))
+        emailrule = EmailRule("test", "at")
+        self.assertFalse(emailrule.validate(True))
 
     def test_emailRuleNone(self):
-        emailRule = EmailRule("test", "at" )
-        self.assertFalse(emailRule.validate(None))
+        emailrule = EmailRule("test", "at")
+        self.assertFalse(emailrule.validate(None))
 
     def test_emailRuleGetLabel(self):
-        emailRule = EmailRule("test", "at" )
-        self.assertEquals(emailRule.getLabel(),"test")
+        emailrule = EmailRule("test", "at")
+        self.assertEquals(emailrule.getLabel(), "test")
 
-    '''
-    Test the listRule
-    '''
+    """
+    Test the list rule
+    """
 
     def test_listRule(self):
-        listRule = ListRule("test", "['Schüler','Leherer']")
-        self.assertTrue(listRule.validate("Schüler"))
+        listrule = ListRule("test", "['Schüler','Lehrer']")
+        self.assertTrue(listrule.validate("Schüler"))
 
     def test_listRuleNotInList(self):
-        listRule = ListRule("test", "['Schüler','Leherer']")
-        self.assertFalse(listRule.validate("Portier"))
+        listrule = ListRule("test", "['Schüler','Leherer']")
+        self.assertFalse(listrule.validate("Portier"))
 
     def test_listRuleNotList(self):
-        listRule = ListRule("test", "10")
-        self.assertFalse(listRule.validate("Portier"))
+        listrule = ListRule("test", "10")
+        self.assertFalse(listrule.validate("Portier"))
 
     def test_listRuleGetLabel(self):
-        listRule = ListRule("test", "['Schüler','Leherer']")
-        self.assertEquals(listRule.getLabel(),"test")
+        listrule = ListRule("test", "['Schüler','Leherer']")
+        self.assertEquals(listrule.getLabel(), "test")
 
-    '''
-    Test the dependencyRule
-    '''
+    """
+    Test the dependency rule
+    """
 
     def test_dependencyRule(self):
-        dependencyRule = DependencyRule("test", {"Anwalt": 500, "Programmierer": 1000}, "test")
-        self.assertEquals(dependencyRule.validate("Anwalt"),500)
+        dependencyrule = DependencyRule("test", {"Anwalt": 500, "Programmierer": 1000}, "test")
+        self.assertEquals(dependencyrule.validate("Anwalt"), 500)
 
     def test_dependencyRuleNotInDictonary(self):
-        dependencyRule = DependencyRule("test", {"Anwalt": 500, "Programmierer": 1000}, "test")
-        self.assertEquals(dependencyRule.validate("Kassierer"),None)
+        dependencyrule = DependencyRule("test", {"Anwalt": 500, "Programmierer": 1000}, "test")
+        self.assertEquals(dependencyrule.validate("Kassierer"), None)
 
     def test_dependencyRuleGetLabel(self):
-        dependencyRule =DependencyRule("test", {"Anwalt": 500, "Programmierer": 1000}, "test")
-        self.assertEquals(dependencyRule.getLabel(),"test")
+        dependencyrule = DependencyRule("test", {"Anwalt": 500, "Programmierer": 1000}, "test")
+        self.assertEquals(dependencyrule.getLabel(), "test")
 
     def test_dependencyRuleGetDepends(self):
-        dependencyRule = DependencyRule("test", {"Anwalt": 500, "Programmierer": 1000}, "test")
-        self.assertEquals(dependencyRule.getDepends(), "test")
-    '''
-    Test the patternRule
-    '''
+        dependencyrule = DependencyRule("test", {"Anwalt": 500, "Programmierer": 1000}, "test")
+        self.assertEquals(dependencyrule.getDepends(), "test")
+    """
+    Test the pattern rule
+    """
 
     def test_patternRule(self):
-        patternRule = PatternRule("test", "[0-9]")
-        self.assertTrue(patternRule.validate("1"))
+        patternrule = PatternRule("test", "[0-9]")
+        self.assertTrue(patternrule.validate("1"))
 
     def test_patternRuleNotFitRegex(self):
-        patternRule = PatternRule("test", "[0-9]")
-        self.assertFalse(patternRule.validate("a"))
+        patternrule = PatternRule("test", "[0-9]")
+        self.assertFalse(patternrule.validate("a"))
 
     def test_patternRuleInt(self):
-        patternRule = PatternRule("test", "[0-9]")
-        self.assertFalse(patternRule.validate("a"))
+        patternrule = PatternRule("test", "[0-9]")
+        self.assertFalse(patternrule.validate("a"))
 
     def test_patternRuleBool(self):
-        patternRule = PatternRule("test", "[0-9]")
-        self.assertFalse(patternRule.validate(True))
+        patternrule = PatternRule("test", "[0-9]")
+        self.assertFalse(patternrule.validate(True))
 
     def test_patternRuleNone(self):
-        patternRule = PatternRule("test", "[0-9]")
-        self.assertFalse(patternRule.validate(None))
+        patternrule = PatternRule("test", "[0-9]")
+        self.assertFalse(patternrule.validate(None))
 
     def test_patternRuleGetLabel(self):
-        patternRule = PatternRule("test", "[0-9]")
-        self.assertEquals(patternRule.getLabel(),"test")
+        patternrule = PatternRule("test", "[0-9]")
+        self.assertEquals(patternrule.getLabel(), "test")
