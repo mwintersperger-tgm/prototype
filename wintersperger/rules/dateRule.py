@@ -7,6 +7,13 @@ class DateRule():
         self.separator = separator
 
     def validate(self, value):
+        """
+        checks if the value follows the rules
+        :param value: the value to be checked
+        :type: string
+        :return: the result of the check
+        :rtype: bool
+        """
         value = str(value)
         validated = False
         try:
@@ -17,4 +24,9 @@ class DateRule():
         return validated
 
     def getLabel(self):
+        """
+        return the label the the data entry this rule applies to
+        :return: the label
+        :rtype: string
+        """
         return self.label

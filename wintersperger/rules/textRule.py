@@ -1,3 +1,4 @@
+
 class TextRule():
     def __init__(self, label, minlength, maxlength, letters):
         self.label = label
@@ -6,6 +7,13 @@ class TextRule():
         self.letters = letters
 
     def validate(self, value):
+        """
+        checks if the value follows the rules
+        :param value: the value to be checked
+        :type: string
+        :return: the result of the check
+        :rtype: bool
+        """
         value = str(value)
         validated = False
         if len(value) < self.maxlength+1 and len(value) > self.minlength-1:
@@ -16,4 +24,9 @@ class TextRule():
         return validated
 
     def getLabel(self):
+        """
+        return the label the the data entry this rule applies to
+        :return: the label
+        :rtype: string
+        """
         return self.label
