@@ -9,16 +9,11 @@ import json
 def resource():
     print("running setup")
     try:
-        # shutil.rmtree(os.path.dirname(os.path.abspath(__file__)) + "\\temp")
-        pass
+        os.mkdir(os.path.dirname(os.path.abspath(__file__)) + "\\tmp")
     except Exception as err:
         print(str(err))
-    try:
-        os.mkdir(os.path.dirname(os.path.abspath(__file__)) + "\\temp")
-    except Exception as err:
-        print(str(err))
-    yield os.path.dirname(os.path.abspath(__file__)) + "/temp/file.txt"
-    shutil.rmtree(os.path.dirname(os.path.abspath(__file__)) + "\\temp")
+    yield os.path.dirname(os.path.abspath(__file__)) + "/tmp/file.txt"
+    shutil.rmtree(os.path.dirname(os.path.abspath(__file__)) + "\\tmp")
 
 
 def test_startFile(resource):
