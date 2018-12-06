@@ -1,10 +1,9 @@
+import re
 
-class TextRule():
-    def __init__(self, label, minlength, maxlength, letters):
+class PatternRule():
+    def __init__(self, label, pattern):
         self.label = label
-        self.minlength = minlength
-        self.maxlength = maxlength
-        self.letters = letters
+        self.pattern = re.compile(pattern)
 
     def validate(self, value):
         """
@@ -14,14 +13,13 @@ class TextRule():
         :return: the result of the check
         :rtype: bool
         """
-        value = str(value)
         validated = False
-        if len(value) < self.maxlength+1 and len(value) > self.minlength-1:
-            validated = True
-        for j in self.letters:
-            if j in value:
-                validated = False
-        return validated
+        try:
+            if self.pattern.match(value) is not None:
+                validated = True
+            return validated
+        except:
+            return validated
 
     def getLabel(self):
         """

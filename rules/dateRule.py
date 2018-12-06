@@ -1,9 +1,10 @@
-import re
+import datetime
 
-class PatternRule():
-    def __init__(self, label, pattern):
+class DateRule():
+    def __init__(self, label, pattern, separator):
         self.label = label
-        self.pattern = re.compile(pattern)
+        self.pattern = pattern
+        self.separator = separator
 
     def validate(self, value):
         """
@@ -14,9 +15,13 @@ class PatternRule():
         :rtype: bool
         """
         validated = False
-        if self.pattern.match(value) is not None:
+        value = str(value)
+        try:
+            datetime.datetime.strptime(value.replace(self.separator, "-"), self.pattern)
             validated = True
-        return validated
+            return validated
+        except:
+            return validated
 
     def getLabel(self):
         """
