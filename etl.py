@@ -3,6 +3,7 @@ from ruleController import RuleController
 import argparse
 
 def main():
+
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--data", help="path to the data file", required=True)
     parser.add_argument("-r","--rule", help="path to the rule file", required=True)
@@ -18,8 +19,8 @@ def main():
     rules.createNumberRule("age",18,25)
     rules.createListRule("job",["Programmierer","Anwalt"])
     rules.createDependencyRule("income",{"Anwalt":500,"Programmierer":1000},"job")
-    rules.createDateRule("birthday", "%d-%m-%Y", "-" )
-    rules.createEmailRule("email", "at" )
+    rules.createDateRule("birthday", "%d-%m-%Y", "-")
+    rules.createEmailRule("email", "at")
     rules.createRulesFile(args.rule)
 
     ETL = ETLController()

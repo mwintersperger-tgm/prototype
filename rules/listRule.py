@@ -1,9 +1,8 @@
 
-class NumberRule():
-    def __init__(self, label, upper, lower):
+class ListRule():
+    def __init__(self, label, list):
         self.label = label
-        self.upper = upper
-        self.lower = lower
+        self.list = list.replace("[","").replace("'","").replace("]","").split(",")
 
     def validate(self, value):
         """
@@ -13,12 +12,14 @@ class NumberRule():
         :return: the result of the check
         :rtype: bool
         """
-        value = int(value)
         validated = False
-        if value > self.lower and value < self.upper:
-            validated = True
-        return validated
-
+        try:
+            for i in self.list:
+                if value == i:
+                    validated = True
+            return validated
+        except:
+            return validated
     def getLabel(self):
         """
         return the label the the data entry this rule applies to

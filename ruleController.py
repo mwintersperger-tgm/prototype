@@ -92,7 +92,7 @@ class RuleController():
         :type: string
         :return: void
         """
-        self.rule_data+='{"label":"%s"},\n' %(label)
+        self.rule_data+='{"label":"%s", "rule":"blank"},\n' %(label)
 
     def createRulesFile(self, rulename):
         """

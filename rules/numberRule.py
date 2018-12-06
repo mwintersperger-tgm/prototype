@@ -1,8 +1,9 @@
 
-class EmailRule():
-    def __init__(self, label, domain):
+class NumberRule():
+    def __init__(self, label, upper, lower):
         self.label = label
-        self.domain = domain
+        self.upper = upper
+        self.lower = lower
 
     def validate(self, value):
         """
@@ -12,12 +13,16 @@ class EmailRule():
         :return: the result of the check
         :rtype: bool
         """
-        value = str(value)
         validated = False
-        if value[(len(value)-len(self.domain)):] == self.domain:
-            if "@" in value:
+        if type(value) is type(True):
+            return validated
+        try:
+            value = int(value)
+            if value > self.lower and value < self.upper:
                 validated = True
-        return validated
+            return validated
+        except:
+            return validated
 
     def getLabel(self):
         """

@@ -1,10 +1,8 @@
-import datetime
 
-class DateRule():
-    def __init__(self, label, pattern, separator):
+class EmailRule():
+    def __init__(self, label, domain):
         self.label = label
-        self.pattern = pattern
-        self.separator = separator
+        self.domain = domain
 
     def validate(self, value):
         """
@@ -14,15 +12,15 @@ class DateRule():
         :return: the result of the check
         :rtype: bool
         """
-        value = str(value)
         validated = False
         try:
-            datetime.datetime.strptime(value.replace(self.separator, "-"), self.pattern)
-            validated = True
-        except ValueError:
-            validated = False
-        return validated
-
+            value = str(value)
+            if value[(len(value)-len(self.domain)):] == self.domain:
+                if "@" in value:
+                    validated = True
+            return validated
+        except:
+            return validated
     def getLabel(self):
         """
         return the label the the data entry this rule applies to

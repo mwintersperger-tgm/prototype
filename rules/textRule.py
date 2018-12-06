@@ -1,8 +1,10 @@
 
-class ListRule():
-    def __init__(self, label, list):
+class TextRule():
+    def __init__(self, label, minlength, maxlength, letters):
         self.label = label
-        self.list = list.replace("[","").replace("'","").replace("]","").split(",")
+        self.minlength = minlength
+        self.maxlength = maxlength
+        self.letters = letters
 
     def validate(self, value):
         """
@@ -13,10 +15,16 @@ class ListRule():
         :rtype: bool
         """
         validated = False
-        for i in self.list:
-            if value == i:
+        try:
+            value = str(value)
+            if len(value) < self.maxlength+1 and len(value) > self.minlength-1:
                 validated = True
-        return validated
+            for j in self.letters:
+                if j in value:
+                    validated = False
+            return validated
+        except:
+            return validated
 
     def getLabel(self):
         """
