@@ -3,6 +3,7 @@ import json
 import os
 from builtins import staticmethod
 
+
 class ImportCls(object):
     @staticmethod
     def forward(dataset, file):
@@ -16,13 +17,13 @@ class ImportCls(object):
         pass
 
     @staticmethod
-    def startFile(file):
+    def start_file(file):
         with open(file, "w") as outfile:
             outfile.truncate(0)
             outfile.write('{"rules":"", "cc":"", "values":[\n')
 
     @staticmethod
-    def endFile(file):
+    def end_file(file):
         with open(file, "a") as outfile:
             outfile.truncate(os.path.getsize("../resources/data/data.json") - 3)
             outfile.write('\n]}')
@@ -41,7 +42,7 @@ class ImportCls(object):
         if len(args.fileoutput) > 0:
             cfg['out'] = args.fileoutput
         with open(cfg['file']) as file:
-            ImportCls.startFile(cfg['out'])
+            ImportCls.start_file(cfg['out'])
             colnames = []
             read = csv.reader(file, delimiter=cfg['delimiter'])
             count = 0
@@ -55,12 +56,11 @@ class ImportCls(object):
                     temp = row
                     res = {}
                     if row:
-                        for x in range(0,len(temp)):
+                        for x in range(0, len(temp)):
                             res[colnames[0][x]] = {}
                             res[colnames[0][x]]["value"] = temp[x]
                             res[colnames[0][x]]["validated"] = False
                         ImportCls.forward(res, cfg['out'])
-                        count+=1
-            ImportCls.endFile(cfg['out'])
+                        count += 1
+            ImportCls.end_file(cfg['out'])
             print(str(count) + " lines imported")
-

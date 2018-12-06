@@ -8,20 +8,20 @@ false = False
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument("-json", "--writejson", help="use this option to generate a JSON file in resources/data",action='store_true')
+parser.add_argument("-json", "--writejson", help="use this option to generate a JSON file in resources/data", action='store_true')
 
-parser.add_argument("-csv", "--writecsv", help="use this option to generate a CSV file in resources/data",action='store_true')
+parser.add_argument("-csv", "--writecsv", help="use this option to generate a CSV file in resources/data", action='store_true')
 
 parser.add_argument("-l", "--lines",
-					help="Sets the amount of lines generated",
+                    help="Sets the amount of lines generated",
                     type=int, required=False, default=-1, nargs='?', const=True)
 
 parser.add_argument("-csvn", "--csvname",
-					help="Sets the name and location of the generated csv file",
+                    help="Sets the name and location of the generated csv file",
                     type=str, required=False, default="../resources/data/result.csv", nargs='?', const=True)
 
 parser.add_argument("-jsonn", "--jsonname",
-					help="Sets the name and location of the generated json file",
+                    help="Sets the name and location of the generated json file",
                     type=str, required=False, default="../resources/data/result.csv", nargs='?', const=True)
 
 args = parser.parse_args()
@@ -35,28 +35,28 @@ def generate(generator):
     :return:
     """
     if generator.startswith("name"):
-        str = ""
-        str += chr(randint(65, 90))
-        for x in range(0, randint(5,11)):
-            str += chr(randint(97, 122))
-        return str
+        stri = ""
+        stri += chr(randint(65, 90))
+        for xa in range(0, randint(5, 11)):
+            stri += chr(randint(97, 122))
+        return stri
     elif generator.startswith("randchar"):
-        str = ""
-        for x in range(0,int(generator[8:])):
-            num = randint(0,2)
+        stri = ""
+        for xb in range(0, int(generator[8:])):
+            num = randint(0, 2)
             if num == 2:
-                str += chr(randint(48,57))
+                stri += chr(randint(48, 57))
             elif num == 1:
-                str += chr(randint(65,90))
+                stri += chr(randint(65, 90))
             else:
-                str += chr(randint(95,122))
+                stri += chr(randint(95, 122))
 
-        return str
+        return stri
     elif generator.startswith("randint"):
-        str = "1"
-        for x in range(0,int(generator[7:])):
-            str += "0"
-        return randint(0,int(str) - 1)
+        stri = "1"
+        for xc in range(0, int(generator[7:])):
+            stri += "0"
+        return randint(0, int(stri) - 1)
     else:
         return "hi"
 
@@ -83,11 +83,12 @@ if __name__ == '__main__':
     if args.lines > 0:
         lines = args.lines
     with open(csvloc, "a") as csvfile:
+        w = None
         if ccsv:
             csvfile.truncate(0)
             w = csv.writer(csvfile, delimiter=delim)
         linecount = 0
-        for i in range(0,lines):
+        for i in range(0, lines):
             newres = {}
             for x in columns['param']:
                 newres[x['propname']] = generate(x['generator'])
@@ -110,6 +111,6 @@ if __name__ == '__main__':
 
     # print(json.dumps(result))
     if cjson:
-        with open(jsonloc,"w") as file:
+        with open(jsonloc, "w") as file:
             file.truncate(0)
             file.write(json.dumps(result))

@@ -15,9 +15,10 @@ def resource():
     yield os.path.dirname(os.path.abspath(__file__)) + "/tmp/file.txt"
     shutil.rmtree(os.path.dirname(os.path.abspath(__file__)) + "\\tmp")
 
+
 @pytest.fixture()
 def testobject():
-    obj = {}
+    obj = dict()
     obj["firstname"] = {}
     obj["firstname"]["value"] = "Alexander"
     obj["firstname"]["validated"] = False
@@ -26,18 +27,19 @@ def testobject():
     obj["lastname"]["validated"] = False
     yield obj
 
-def test_startFile(resource):
-    ImportCls.startFile(resource)
+
+def test_startfile(resource):
+    ImportCls.start_file(resource)
     with open(resource) as file:
         obj = json.loads(file.read() + ']}')
         assert obj
         print(str(obj))
 
 
-def test_endFile(resource):
+def test_endfile(resource):
     with open(resource, "w") as file:
         file.write('{"var":[{},\n')
-    ImportCls.endFile(resource)
+    ImportCls.end_file(resource)
     with open(resource) as file:
         string = file.read()
         print(string)
@@ -55,10 +57,11 @@ def test_forward(resource, testobject):
         obj = json.loads(string)
         assert obj
 
+
 def testcombined(resource, testobject):
-    ImportCls.startFile(resource)
+    ImportCls.start_file(resource)
     ImportCls.forward(testobject, resource)
-    ImportCls.endFile(resource)
+    ImportCls.end_file(resource)
     with open(resource) as file:
         string = file.read()
         print(string)

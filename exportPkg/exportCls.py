@@ -51,6 +51,7 @@ class ExportCls(object):
         firstset = True
         print("Exporting as CSV")
         print(len(data))
+        print(filename)
         with open(filename, "a") as file:
             file.truncate(0)
             w = csv.writer(file, delimiter="|")

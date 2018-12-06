@@ -9,24 +9,24 @@ import csv
 def resource():
     print("running setup")
     try:
-        os.stat("/temp")
+        os.mkdir(os.path.dirname(os.path.abspath(__file__)) + "\\tmp")
     except Exception as err:
-        str(err)
-        os.mkdir("/temp")
-    yield "/temp"
-    shutil.rmtree("/temp")
+        print(str(err))
+    yield os.path.dirname(os.path.abspath(__file__)) + "/tmp/file.txt"
+    shutil.rmtree(os.path.dirname(os.path.abspath(__file__)) + "\\tmp")
+
 
 @pytest.fixture()
 def sampledata():
     data = []
-    tmp1 = {}
+    tmp1 = dict()
     tmp1["firstname"] = {}
     tmp1["firstname"]["value"] = "Alexander"
     tmp1["firstname"]["validated"] = True
     tmp1["lastname"] = {}
     tmp1["lastname"]["value"] = "Kramreiter"
     tmp1["lastname"]["validated"] = True
-    tmp2 = {}
+    tmp2 = dict()
     tmp2["firstname"] = {}
     tmp2["firstname"]["value"] = "Alexander"
     tmp2["firstname"]["validated"] = True
@@ -45,9 +45,6 @@ def test_csvoutput(resource, sampledata):
         firstline = True
         tmp = {}
         print(str(read))
-        assert read
-
-
+        assert isinstance(read, object)
 
 # Don't have an idea how to check if the generated xlsx is valid
-
