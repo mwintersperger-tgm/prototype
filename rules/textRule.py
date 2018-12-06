@@ -7,13 +7,13 @@ class TextRule():
 
     def validate(self, value):
         value = str(value)
-        if len(value) < self.maxlength and len(value) > self.minlength:
-            for j in self.letters:
-                if j in value:
-                    return False
-            return True
-        else:
-            return False
+        validated = False
+        if len(value) < self.maxlength+1 and len(value) > self.minlength-1:
+            validated = True
+        for j in self.letters:
+            if j in value:
+                validated = False
+        return validated
 
     def getLabel(self):
         return self.label

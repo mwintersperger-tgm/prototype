@@ -5,13 +5,11 @@ class EmailRule():
 
     def validate(self, value):
         value = str(value)
+        validated = False
         if value[(len(value)-len(self.domain)):] == self.domain:
             if "@" in value:
-                return True
-            else:
-                return False
-        else:
-            return False
+                validated = True
+        return validated
 
     def getLabel(self):
         return self.label

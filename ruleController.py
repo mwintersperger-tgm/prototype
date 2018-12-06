@@ -21,11 +21,11 @@ class RuleController():
     def createListRule(self, label="list", list=[]):
         self.rule_data+='{"label":"%s", "rule":"list", "list":"%s"},\n' % (label,list)
 
-    def createDependencyRule(self, label="dependency", list=[], depends={}):
-        self.rule_data+='{"label":"%s", "rule":"dependency", "list":"%s", "depends":"%s"},\n' %(label,list,depends)
+    def createDependencyRule(self, label="dependency", dict={}, depends=""):
+        self.rule_data+='{"label":"%s", "rule":"dependency", "dict":%s, "depends":"%s"},\n' %(label,str(dict).replace("'","\""),depends)
 
     def createRulesFile(self,name):
-        self.rule_data = self.rule_data[:len(self.rule_data)-2]+'\n]\n}'
+        self.rule_data = self.rule_data[:len(self.rule_data)-2]+'\n]}'
         with open(name, 'w') as outfile:
             outfile.write(self.rule_data)
         outfile.close()

@@ -17,10 +17,10 @@ class ETLController():
         with open(rulename, "r") as f:
             rule={}
             f.readline()
-            for i in range(1,filelen-2):
+            for i in range(1,filelen-1):
                 rule=json.loads(f.readline().rstrip(",\n"))
                 if rule["rule"] == "text":
-                    self.rules.append(TextRule(str(rule["label"]), int(rule["minlength"]), int(rule["maxlength"]), str(["letters"])))
+                    self.rules.append(TextRule(str(rule["label"]), int(rule["minlength"]), int(rule["maxlength"]), str(rule["letters"])))
 
                 elif rule["rule"] == "number":
                     self.rules.append(NumberRule(str(rule["label"]), int(rule["upper"]), int(rule["lower"])))
@@ -38,7 +38,7 @@ class ETLController():
                     self.rules.append(ListRule(str(rule["label"]), rule["list"]))
 
                 elif rule["rule"] == "dependency":
-                    self.rules.append(DependencyRule(str(rule["label"]), rule["list"], rule["depends"]))
+                    self.rules.append(DependencyRule(str(rule["label"]), rule["dict"], rule["depends"]))
 
     def setRules(self,filename,rule):
         newfile = filename[:filename.rfind('/')+1]+"new_"+filename[filename.rfind('/')+1:]
@@ -89,16 +89,16 @@ class ETLController():
                     for i in range(0,len(self.rules)):
                         if(str(self.rules[i])[str(self.rules[i]).find('.')+1:str(self.rules[i]).find('R')])=="dependency":
                             data[self.rules[i].getLabel()]["value"]=str(self.rules[i].validate(data[self.rules[i].getDepends()]["value"]))
-                            data[self.rules[i].getLabel()]["validated"]=True
+                            data[self.rules[i].getLabel()]["validated"]=str(True)
                         else:
                             data[self.rules[i].getLabel()]["validated"]=str(self.rules[i].validate(data[self.rules[i].getLabel()]["value"]))
-                    if curLine < filelen:
+                    if curLine < filelen-1:
                         nf.write("%s,\n" % str(data).replace("'","\""))
                     else:
-                        nf.write("%s\n" % str(data))
+                        nf.write("%s\n" % str(data).replace("'","\""))
                 # now we write the unchanged rest ...
                 while line:
-                    nf.write(line)
                     line = of.readline()
+                    nf.write(line)
         os.remove(filename)
         os.rename(newfile, filename)

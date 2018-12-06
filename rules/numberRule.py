@@ -6,10 +6,10 @@ class NumberRule():
 
     def validate(self, value):
         value = int(value)
+        validated = False
         if value > self.lower and value < self.upper:
-            return True
-        else:
-            return False
+            validated = True
+        return validated
 
     def getLabel(self):
         return self.label
