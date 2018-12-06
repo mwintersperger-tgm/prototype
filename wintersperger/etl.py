@@ -6,11 +6,13 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--data", help="path to the data file", required=True)
     parser.add_argument("-r","--rule", help="path to the rule file", required=True)
-    parser.add_argument("-st","--start", help="from which data number", required=True)
-    parser.add_argument("-sp","--span", help="span of data", required=True)
+    parser.add_argument("-st","--start", help="from which data entry index", required=True)
+    parser.add_argument("-sp","--span", help="span of data entries", required=True)
+    parser.add_argument("-cc","--countrycode", help="the country code of the data file", required=True)
 
     args = parser.parse_args()
     rules = RuleController()
+    rules.initRules()
     rules.createTextRule("firstname",0,10,["*"])
     rules.createTextRule("lastname",0,10,[])
     rules.createNumberRule("age",18,25)
@@ -21,6 +23,7 @@ def main():
     rules.createRulesFile(args.rule)
 
     ETL = ETLController()
+    ETL.setCC(args.data, args.countrycode)
     ETL.setRules(args.data, args.rule)
     ETL.runRules(args.data,args.start,args.span)
 
