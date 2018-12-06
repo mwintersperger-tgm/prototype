@@ -59,7 +59,7 @@ args always overwrite param.json
 - -csv / --writecsv: creates the CSV output, independent of the preset in param.json
 - -l / --lines: set the amount of lines generated
 - -csvn / --csvname: sets the name and location of the generated csv file
-- jsonn / --jsonname: sets the name and location of the generated json file
+- -jsonn / --jsonname: sets the name and location of the generated json file
 - -h / --help: spells the stuff in the lines above out for you
 
 ## import.py
