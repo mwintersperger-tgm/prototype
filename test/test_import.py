@@ -1,4 +1,4 @@
-from importPkg.importCls import ImportCls
+import importPkg.importCls as ImportCls
 import pytest
 import os
 import shutil

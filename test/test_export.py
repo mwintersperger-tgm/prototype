@@ -1,8 +1,9 @@
-from exportPkg.exportCls import ExportCls
+import exportPkg.exportCls as ExportCls
 import pytest
 import os
 import shutil
 import csv
+import json
 
 
 @pytest.fixture()
@@ -43,8 +44,9 @@ def test_csvoutput(resource, sampledata):
     with open(resource) as file:
         read = csv.reader(file, delimiter="|")
         firstline = True
-        tmp = {}
-        print(str(read))
+        listi = []
+        for x in read:
+            listi.append(x)
         assert isinstance(read, object)
 
 # Don't have an idea how to check if the generated xlsx is valid
