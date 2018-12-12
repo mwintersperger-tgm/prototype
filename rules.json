@@ -1,9 +1,0 @@
-{"rules":[
-{"label":"firstname", "rule":"text", "minlength":"0", "maxlength":"10", "letters":"['*']"},
-{"label":"lastname", "rule":"text", "minlength":"0", "maxlength":"10", "letters":"[]"},
-{"label":"age", "rule":"number", "lower":"18", "upper":"25"},
-{"label":"job", "rule":"list", "list":"['Programmierer', 'Anwalt']"},
-{"label":"income", "rule":"dependency", "dict":{"Anwalt": 500, "Programmierer": 1000}, "depends":"job"},
-{"label":"birthday", "rule":"date", "pattern":"%d-%m-%Y", "separator":"-"},
-{"label":"email", "rule":"email", "domain":"at"}
-]}
