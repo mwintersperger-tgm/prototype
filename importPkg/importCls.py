@@ -25,6 +25,7 @@ def end_file(file):
         outfile.truncate(os.path.getsize(file) - 3)
         outfile.write('\n]}')
 
+
 def importcsv2(args):
     cfg = {}
     with open("../resources/inconfig.json") as file:

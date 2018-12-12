@@ -9,14 +9,14 @@ import json
 def resource():
     print("running setup")
     try:
-        shutil.rmtree(os.path.dirname(os.path.abspath(__file__)) + "\\tmp")
-    except:
-        pass
-    try:
         os.mkdir(os.path.dirname(os.path.abspath(__file__)) + "\\tmp")
     except Exception as err:
         print(str(err))
     yield os.path.dirname(os.path.abspath(__file__)) + "/tmp/file.txt"
+    try:
+        shutil.rmtree(os.path.dirname(os.path.abspath(__file__)) + "\\tmp")
+    except Exception as err:
+        print(str(err))
 
 
 
