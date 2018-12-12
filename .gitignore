@@ -17,3 +17,5 @@ import/data\.json
 resources/data/
 
 *.pyc
+
+test/tmp/
