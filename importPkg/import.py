@@ -22,4 +22,4 @@ parser.add_argument("-out", "--fileoutput",
 args = parser.parse_args()
 
 if __name__ == '__main__':
-    ImportCls.importcsv(args)
+    ImportCls.importcsv2(args)

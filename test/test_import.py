@@ -9,11 +9,15 @@ import json
 def resource():
     print("running setup")
     try:
+        shutil.rmtree(os.path.dirname(os.path.abspath(__file__)) + "\\tmp")
+    except:
+        pass
+    try:
         os.mkdir(os.path.dirname(os.path.abspath(__file__)) + "\\tmp")
     except Exception as err:
         print(str(err))
     yield os.path.dirname(os.path.abspath(__file__)) + "/tmp/file.txt"
-    shutil.rmtree(os.path.dirname(os.path.abspath(__file__)) + "\\tmp")
+
 
 
 @pytest.fixture()
@@ -38,7 +42,8 @@ def test_startfile(resource):
 
 def test_endfile(resource):
     with open(resource, "w") as file:
-        file.write('{"var":[{},\n')
+        file.truncate(0)
+        file.write("{\"var\":[{},\n")
     ImportCls.end_file(resource)
     with open(resource) as file:
         string = file.read()

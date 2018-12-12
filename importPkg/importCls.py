@@ -22,11 +22,10 @@ def start_file(file):
 
 def end_file(file):
     with open(file, "a") as outfile:
-        outfile.truncate(os.path.getsize("../resources/data/data.json") - 3)
+        outfile.truncate(os.path.getsize(file) - 3)
         outfile.write('\n]}')
 
-
-def importcsv(args):
+def importcsv2(args):
     cfg = {}
     with open("../resources/inconfig.json") as file:
         cfg = json.load(file)
@@ -39,7 +38,7 @@ def importcsv(args):
     if len(args.fileoutput) > 0:
         cfg['out'] = args.fileoutput
     with open(cfg['file']) as file:
-        ImportCls.start_file(cfg['out'])
+        start_file(cfg['out'])
         colnames = []
         read = csv.reader(file, delimiter=cfg['delimiter'])
         count = 0
@@ -57,7 +56,33 @@ def importcsv(args):
                         res[colnames[0][x]] = {}
                         res[colnames[0][x]]["value"] = temp[x]
                         res[colnames[0][x]]["validated"] = False
-                    ImportCls.forward(res, cfg['out'])
+                    forward(res, cfg['out'])
                     count += 1
-        ImportCls.end_file(cfg['out'])
+        end_file(cfg['out'])
+        print(str(count) + " lines imported")
+
+
+def importcsv(infile, outfile, delim):
+    with open(infile) as file:
+        start_file(outfile)
+        colnames = []
+        read = csv.reader(file, delimiter=delim)
+        count = 0
+        firstline = True
+        for row in read:
+            if firstline:
+                firstline = False
+                colnames.append(row)
+                print(colnames)
+            else:
+                temp = row
+                res = {}
+                if row:
+                    for x in range(0, len(temp)):
+                        res[colnames[0][x]] = {}
+                        res[colnames[0][x]]["value"] = temp[x]
+                        res[colnames[0][x]]["validated"] = False
+                    forward(res, outfile)
+                    count += 1
+        end_file(outfile)
         print(str(count) + " lines imported")
