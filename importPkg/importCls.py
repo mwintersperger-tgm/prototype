@@ -64,6 +64,15 @@ def importcsv2(args):
 
 
 def importcsv(infile, outfile, delim):
+    """
+    Imports the infile (CSV) into a JSON structure that should be usable for the rest of the project.
+    The JSON will be saved in the outfile.
+    The default delimiter is ';', but it can be changed.
+    :param infile:
+    :param outfile:
+    :param delim:
+    :return:
+    """
     with open(infile) as file:
         start_file(outfile)
         colnames = []

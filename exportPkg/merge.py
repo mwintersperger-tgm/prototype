@@ -1,5 +1,6 @@
 import json #I'll need it sooner or later
 
+
 def mergeline(objects, keyset):
     """
     TODO implement this
