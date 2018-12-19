@@ -127,7 +127,7 @@ class ETLController:
         """
         with open("%s" % filename, "r") as f:
             rule = f.readline()
-            rule = rule[10:-rule.find("cc")-2]
+            rule = rule[10:rule.find(",")-1]
             return rule
 
     def fileLength(self, filename):
