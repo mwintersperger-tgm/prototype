@@ -6,6 +6,7 @@ from rules.patternRule import PatternRule
 from rules.listRule import ListRule
 from rules.dependencyRule import DependencyRule
 from rules.blankRule import BlankRule
+from rules.ageRule import AgeRule
 
 import json
 import os
@@ -55,6 +56,9 @@ class ETLController:
 
                 elif rule["rule"] == "dependency":
                     self.rules.append(DependencyRule(str(rule["label"]), rule["dict"], rule["depends"]))
+
+                elif rule["rule"] == "age":
+                    self.rules.append(AgeRule(str(rule["label"]), rule["depends"], str(rule["pattern"]), str(rule["separator"])))
 
                 elif rule["rule"] == "blank":
                     self.rules.append(BlankRule(str(rule["label"])))
@@ -183,7 +187,8 @@ class ETLController:
                     data = json.loads(of.readline().rstrip(",\n"))
                     curline += 1
                     for j in range(0, len(self.rules)):
-                        # dependency rules work different than normal rules so we have to check if the rules is one
+
+                        # some rules work different than normal rules so we have to check if the current rule is one of those
                         if(str(self.rules[j])[str(self.rules[j]).find('.')+1:str(self.rules[j]).find('R')]) == "dependency":
                             # set the value of the dependent data entry depending of the value of the value of the data entry this one depends on
                             data[self.rules[j].getLabel()]["value"] = str(self.rules[j].validate(data[self.rules[j].getDepends()]["value"]))
@@ -192,6 +197,14 @@ class ETLController:
                                 data[self.rules[j].getLabel()]["validated"] = str(False)
                             else:
                                 data[self.rules[j].getLabel()]["validated"] = str(True)
+
+                        elif(str(self.rules[j])[str(self.rules[j]).find('.')+1:str(self.rules[j]).find('R')]) == "age":
+                            data[self.rules[j].getLabel()]["value"] = str(self.rules[j].validate(data[self.rules[j].getDepends()]["value"]))
+                            if data[self.rules[j].getLabel()]["value"] is None:
+                                data[self.rules[j].getLabel()]["validated"] = str(False)
+                            else:
+                                data[self.rules[j].getLabel()]["validated"] = str(True)
+
                         else:
                             # set the validation of the current data entry
                             data[self.rules[j].getLabel()]["validated"] = str(self.rules[j].validate(data[self.rules[j].getLabel()]["value"]))
@@ -204,6 +217,35 @@ class ETLController:
                 while line:
                     line = of.readline()
                     nf.write(line)
+        # remove the old file and rename the new file to the old one
+        os.remove(filename)
+        os.rename(newfile, filename)
+
+    def simpleReplace(self, filename, col = "", replace = {}):
+        filelen = self.fileLength(filename)
+        curline = 0
+        # the newfile has the same path as the old one but its name gets a "new_" added to it
+        newfile = filename[:filename.rfind('/')+1]+"new_"+filename[filename.rfind('/')+1:]
+        with open("%s" % filename, "r") as of:
+            line = of.readline()
+            curline += 1
+            with open("%s" % newfile, "w") as nf:
+                nf.write("%s" % line)
+                # then we validate the changed lines
+                for i in range(0, filelen-2):
+                    # strip ',\n' from the lines to use them as dictionaries
+                    data = json.loads(of.readline().rstrip(",\n"))
+                    for j in replace:
+                        curline += 1
+                        data[col]["value"] = data[col]["value"].replace(j,replace[j])
+                        # add either a ',\n' or a '\' and replace the ' of the dictionary with the " required by json
+                    if curline < filelen-1:
+                        nf.write("%s,\n" % str(data).replace("'", "\""))
+                    else:
+                        nf.write("%s\n" % str(data).replace("'", "\""))
+                # now we write the last line
+                line = of.readline()
+                nf.write(line)
         # remove the old file and rename the new file to the old one
         os.remove(filename)
         os.rename(newfile, filename)
