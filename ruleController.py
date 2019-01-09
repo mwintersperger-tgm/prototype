@@ -100,6 +100,22 @@ class RuleController:
         """
         self.rule_data += '{"label":"%s", "rule":"age", "pattern":%s, "separator":"%s", "depends":"%s"},\n' %(label, pattern, separator, depends)
 
+    def createDeadlineRule(self, label="age", depends="", pattern="%d-%m-%Y", separator="/"):
+        """
+        This function appends a line defining a deadlineRule to the list
+        :param label: the label of the data entry this rule applies to
+        :type: string
+        :param depends: the label of the entry this entry depends on
+        :type: string
+        :param pattern: the pattern the data entry has to follow
+        :type: string
+        :param separator: the character used to seperate the values
+        :type: string
+        :return: void
+        """
+        self.rule_data += '{"label":"%s", "rule":"deadline", "pattern":%s, "separator":"%s", "depends":"%s"},\n' %(label, pattern, separator, depends)
+
+
     def createBlankRule(self, label="blank"):
         """
         This function appends a line defining a blankRule to the list

@@ -7,6 +7,7 @@ from rules.listRule import ListRule
 from rules.dependencyRule import DependencyRule
 from rules.blankRule import BlankRule
 from rules.ageRule import AgeRule
+from rules.deadlineRule import DeadlineRule
 
 import json
 import os
@@ -59,6 +60,9 @@ class ETLController:
 
                 elif rule["rule"] == "age":
                     self.rules.append(AgeRule(str(rule["label"]), rule["depends"], str(rule["pattern"]), str(rule["separator"])))
+
+                elif rule["rule"] == "deadline":
+                    self.rules.append(DeadlineRule(str(rule["label"]), rule["depends"], str(rule["pattern"]), str(rule["separator"])))
 
                 elif rule["rule"] == "blank":
                     self.rules.append(BlankRule(str(rule["label"])))
@@ -189,21 +193,15 @@ class ETLController:
                     for j in range(0, len(self.rules)):
 
                         # some rules work different than normal rules so we have to check if the current rule is one of those
-                        if(str(self.rules[j])[str(self.rules[j]).find('.')+1:str(self.rules[j]).find('R')]) == "dependency":
+                        if(str(self.rules[j])[str(self.rules[j]).find('.')+1:str(self.rules[j]).find('R')]) == "dependency" or (str(self.rules[j])[str(self.rules[j]).find('.')+1:str(self.rules[j]).find('R')]) == "age" or (str(self.rules[j])[str(self.rules[j]).find('.')+1:str(self.rules[j]).find('R')]) == "deadline":
                             # set the value of the dependent data entry depending of the value of the value of the data entry this one depends on
                             data[self.rules[j].getLabel()]["value"] = str(self.rules[j].validate(data[self.rules[j].getDepends()]["value"]))
                             # set validated to True or False depending of the dependency validation
                             if data[self.rules[j].getLabel()]["value"] is None:
-                                data[self.rules[j].getLabel()]["validated"] = str(False)
+                                data[self.rules[j].getLabel()]["validated"] = "False"
                             else:
-                                data[self.rules[j].getLabel()]["validated"] = str(True)
+                                data[self.rules[j].getLabel()]["validated"] = "True"
 
-                        elif(str(self.rules[j])[str(self.rules[j]).find('.')+1:str(self.rules[j]).find('R')]) == "age":
-                            data[self.rules[j].getLabel()]["value"] = str(self.rules[j].validate(data[self.rules[j].getDepends()]["value"]))
-                            if data[self.rules[j].getLabel()]["value"] is None:
-                                data[self.rules[j].getLabel()]["validated"] = str(False)
-                            else:
-                                data[self.rules[j].getLabel()]["validated"] = str(True)
 
                         else:
                             # set the validation of the current data entry
