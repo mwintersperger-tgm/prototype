@@ -40,7 +40,7 @@ def sampledata():
 
 
 def test_csvoutput(resource, sampledata):
-    ExportCls.exportCSV(sampledata, resource)
+    ExportCls.exportcsv(sampledata, resource)
     with open(resource) as file:
         read = csv.reader(file, delimiter="|")
         firstline = True

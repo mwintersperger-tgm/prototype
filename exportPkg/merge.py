@@ -9,4 +9,6 @@ def mergeline(objects, keyset):
     :param keyset: keys to determine which attributes have to align for a successful merge
     :return: merge result
     """
+    dict = {}
+
     return dict

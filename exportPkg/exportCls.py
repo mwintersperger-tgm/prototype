@@ -39,7 +39,7 @@ def exportExcel(data):
     frame.to_excel("../resources/data/test.xlsx", sheet_name="test", index=False)
 
 
-def exportCSV(data, filename):
+def exportcsv(data, filename):
     """
     Exports the given data, which should be a list of dictionaries (expect errors if it isn't one)
     as a CSV file. First row includes the column names, all others include values
