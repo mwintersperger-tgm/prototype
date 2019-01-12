@@ -1,4 +1,4 @@
-from exportPkg.exportCls import ExportCls
+import exportPkg.exportCls as ExportCls
 import json
 
 

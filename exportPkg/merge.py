@@ -1,14 +1,171 @@
-import json #I'll need it sooner or later
+
+
+def keysonly(obj, keyset):
+    """
+    returns an object that uses values from the input object that are relevant to the keyset.
+    If a keyset attribute doesn't exist, None is used instead. This function should never throw errors, therefore this
+    failsafe is built into it.
+    For example object = {"name":"alex", "age":19} and keyset = ["name"] would return {"name":"alex"}
+    :param obj:
+    :param keyset:
+    :return:
+    """
+    out = dict()
+    for x in keyset:
+        try:
+            out[x] = obj[x]
+        except Exception:
+            out[x] = None
+    return out
+
+
+def keyalign(object1, object2, keyset):
+    """
+    checks if the keysets of the two given objects are the same
+    :param object1:
+    :param object2:
+    :param keyset:
+    :return:
+    """
+    try:
+        for x in keyset:
+            if object1[x] != object2[x]:
+                return False
+        return True
+    except Exception as err:
+        print(err)
+        return False
 
 
 def mergeline(objects, keyset):
     """
-    TODO implement this
-    merges dicts in the objects list into one dataset if the values in the keyset align
+    merges dicts in the objects list into one dataset if the values in the keyset align.
     :param objects: list of input objects
     :param keyset: keys to determine which attributes have to align for a successful merge
     :return: merge result
     """
-    dict = {}
 
-    return dict
+    try:
+        outdict = objects[0]
+        objects.remove(objects[0])
+        print("first object")
+        print(outdict)
+        for x in objects:
+            print("Key Alignment: ", keyalign(outdict, x, keyset))
+            if keyalign(outdict, x, keyset):
+                for y in x.keys():
+                    if y not in outdict.keys():
+                        outdict[y] = x[y]
+        return outdict
+    except Exception as err:
+        print(err)
+        return {}
+
+
+def mergelinerisky(objects):
+    """
+    doesn't check for keyset alignment, only checks if the attribute already exists in the dict.
+    As a result, using this method is more risky, but better in terms of performance if you already made sure that the
+    keysets of all objects align (by means of groupbykeys or something).
+    :param objects:
+    :return:
+    """
+    try:
+        outdict = {}
+        for x in objects:
+            for y in x.keys():
+                if y not in outdict.keys():
+                    outdict[y] = x[y]
+        return outdict
+    except Exception as err:
+        print(err)
+        return {}
+
+
+def gatherkeys(objects, keyset):
+    """
+    collects all available combinations of keys and adds them into a list
+    :param objects:
+    :param keyset:
+    :return:
+    """
+
+    array = []
+    for obj in objects:
+        orig = True
+        for key in array:
+            if keyalign(obj, key, keyset):
+                orig = False
+        if orig:
+            array.append(keysonly(obj, keyset))
+    return array
+
+
+def getkeygroup(objects, keyset):
+    """
+    returns a list filled with all objects with the given keyset.
+    :param objects:
+    :param keyset:
+    :return:
+    """
+    array = []
+    for x in objects:
+        if keyalign(x, keyset, keyset.keys()):
+            array.append(x)
+
+    return array
+
+
+def groupbykeys(objects, keysets):
+    """
+    creates a json structure:
+    [
+        {
+            "key": {},
+            "values": [
+                {}
+            ]
+        }
+    ]
+    by grouping the given objects into arrays ("values") based on the keysets they align with.
+    There is one "key", "values" entry for each of the given keysets.
+    Both objects and keysets are expected to be arrays of dictionaries (if they aren't, expect errors).
+    :param objects:
+    :param keysets:
+    :return:
+    """
+
+    array = []
+    for x in keysets:
+        tmp = dict()
+        tmp['key'] = x
+        tmp['values'] = []
+        array.append(tmp)
+
+    for x in objects:
+        for y in array:
+            if keyalign(x, y['key'], y['key'].keys()):
+                y['values'].append(x)
+
+    return array
+
+
+def finalmerge(gbkobjects):
+    """
+    expects the output from groupbykeys as a parameter to initiate the final merge.
+    :param gbkobjects:
+    :return:
+    """
+    array = []
+    for x in gbkobjects:
+        array.append(mergelinerisky(x['values']))
+    return array
+
+
+def fullmerge(objects, keyset):
+    tmp = gatherkeys(objects, keyset)
+    out = []
+    for x in tmp:
+        tmp2 = getkeygroup(objects, x)
+        out.append(mergelinerisky(tmp2))
+    return out
