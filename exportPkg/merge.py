@@ -47,15 +47,18 @@ def mergeline(objects, keyset):
 
     try:
         outdict = objects[0]
+        if not isinstance(outdict, dict):
+            return None
         objects.remove(objects[0])
         print("first object")
         print(outdict)
         for x in objects:
-            print("Key Alignment: ", keyalign(outdict, x, keyset))
-            if keyalign(outdict, x, keyset):
-                for y in x.keys():
-                    if y not in outdict.keys():
-                        outdict[y] = x[y]
+            if isinstance(x, dict):
+                print("Key Alignment: ", keyalign(outdict, x, keyset))
+                if keyalign(outdict, x, keyset):
+                    for y in x.keys():
+                        if y not in outdict.keys():
+                            outdict[y] = x[y]
         return outdict
     except Exception as err:
         print(err)
@@ -73,9 +76,10 @@ def mergelinerisky(objects):
     try:
         outdict = {}
         for x in objects:
-            for y in x.keys():
-                if y not in outdict.keys():
-                    outdict[y] = x[y]
+            if isinstance(x, dict):
+                for y in x.keys():
+                    if y not in outdict.keys():
+                        outdict[y] = x[y]
         return outdict
     except Exception as err:
         print(err)
