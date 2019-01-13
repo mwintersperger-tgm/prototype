@@ -89,8 +89,34 @@ def mergelinerisky(objects):
 def gatherkeys(objects, keyset):
     """
     collects all available combinations of keys and adds them into a list
-    :param objects:
-    :param keyset:
+    :param objects: list
+    :param keyset: list
+    :return:
+    """
+
+    array = []
+    for obj in objects:
+        orig = True
+        # expected behavior: keys are not allowed to be null / None
+        for x in keyset:
+            if x not in obj.keys():
+                orig = False
+
+        if orig:
+            for key in array:
+                if keyalign(obj, key, keyset):
+                    orig = False
+        if orig:
+            array.append(keysonly(obj, keyset))
+    return array
+
+
+def gatherkeysallownone(objects, keyset):
+    """
+    collects all available combinations of keys and adds them into a list.
+    Allows for keys that are not set to be added as None values
+    :param objects: list
+    :param keyset: list
     :return:
     """
 
@@ -108,8 +134,8 @@ def gatherkeys(objects, keyset):
 def getkeygroup(objects, keyset):
     """
     returns a list filled with all objects with the given keyset.
-    :param objects:
-    :param keyset:
+    :param objects: list
+    :param keyset: dict
     :return:
     """
     array = []
@@ -157,6 +183,8 @@ def groupbykeys(objects, keysets):
 def finalmerge(gbkobjects):
     """
     expects the output from groupbykeys as a parameter to initiate the final merge.
+    made obsolete by the less memory consuming getkeygroup + mergelinerisky
+    method used in finalmerge since gbk may eats too much memory
     :param gbkobjects:
     :return:
     """

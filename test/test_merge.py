@@ -169,16 +169,60 @@ def testmergelineriskynodict():
     assert res == "{}"
 
 
-def testkeysets(testobj, keys):
+def testgatherkeys(testobj, keys):
     res = str(Merge.gatherkeys(testobj, keys))
     print(res)
     assert res == "[{'fname': 'a', 'lname': 'b'}, {'fname': 'a', 'lname': 'c'}, {'fname': 'd', 'lname': 'e'}, {'fname': 'f', 'lname': 'e'}]"
 
 
-def testfullmerge(testobj, keys):
-    res = str(Merge.fullmerge(testobj, keys))
+def testgatherkeyswrongentry(testobj, keys):
+    testobj.append(json.loads('{"fname": "x", "uid": "y"}'))
+    res = str(Merge.gatherkeys(testobj, keys))
     print(res)
-    assert res == "[{'fname': 'a', 'lname': 'b', 'uid': 'hello', 'age': 27, 'gid': 'world'}, {'fname': 'a', 'lname': 'c', 'uid': 'hi', 'age': 22}, {'fname': 'd', 'lname': 'e', 'uid': 'soup', 'gid': 'liquid'}, {'fname': 'f', 'lname': 'e', 'age': 19}]"
+    assert res == "[{'fname': 'a', 'lname': 'b'}, {'fname': 'a', 'lname': 'c'}, {'fname': 'd', 'lname': 'e'}, {'fname': 'f', 'lname': 'e'}]"
+
+
+def testgatherkeysempty(keys):
+    res = str(Merge.gatherkeys([], keys))
+    print(res)
+    assert res == "[]"
+
+
+def testgatherkeysnone(testobj, keys):
+    res = str(Merge.gatherkeysallownone(testobj, keys))
+    print(res)
+    assert res == "[{'fname': 'a', 'lname': 'b'}, {'fname': 'a', 'lname': 'c'}, {'fname': 'd', 'lname': 'e'}, {'fname': 'f', 'lname': 'e'}]"
+
+
+def testgatherkeysnonewrongentry(testobj, keys):
+    testobj.append(json.loads('{"fname": "x", "uid": "y"}'))
+    res = str(Merge.gatherkeysallownone(testobj, keys))
+    print(res)
+    assert res == "[{'fname': 'a', 'lname': 'b'}, {'fname': 'a', 'lname': 'c'}, {'fname': 'd', 'lname': 'e'}, {'fname': 'f', 'lname': 'e'}, {'fname': 'x', 'lname': None}]"
+
+
+def testgatherkeysnoneempty(keys):
+    res = str(Merge.gatherkeysallownone([], keys))
+    print(res)
+    assert res == "[]"
+
+
+def testkeygroup(testobj, keysets):
+    res = str(Merge.getkeygroup(testobj, keysets[0]))
+    print(res)
+    assert res == "[{'fname': 'a', 'lname': 'b', 'uid': 'hello'}, {'fname': 'a', 'lname': 'b', 'age': 27}, {'fname': 'a', 'lname': 'b', 'gid': 'world'}]"
+
+
+def testkeygroupemptyobject(keysets):
+    res = str(Merge.getkeygroup([], keysets[0]))
+    print(res)
+    assert res == "[]"
+
+
+def testkeygroupemptykeyset(testobj):
+    res = str(Merge.getkeygroup(testobj, {}))
+    print(res)
+    assert res == str(testobj)
 
 
 def testgroupkeys(testobj, keysets):
@@ -187,9 +231,33 @@ def testgroupkeys(testobj, keysets):
     assert res == "[{'key': {'fname': 'a', 'lname': 'b'}, 'values': [{'fname': 'a', 'lname': 'b', 'uid': 'hello'}, {'fname': 'a', 'lname': 'b', 'age': 27}, {'fname': 'a', 'lname': 'b', 'gid': 'world'}]}, {'key': {'fname': 'a', 'lname': 'c'}, 'values': [{'fname': 'a', 'lname': 'c', 'uid': 'hi'}, {'fname': 'a', 'lname': 'c', 'age': 22}]}, {'key': {'fname': 'd', 'lname': 'e'}, 'values': [{'fname': 'd', 'lname': 'e', 'uid': 'soup'}, {'fname': 'd', 'lname': 'e', 'gid': 'liquid'}]}, {'key': {'fname': 'f', 'lname': 'e'}, 'values': [{'fname': 'f', 'lname': 'e', 'age': 19}]}]"
 
 
-def testkeygroup(testobj, keysets):
-    res = str(Merge.getkeygroup(testobj, keysets[0]))
+def testgroupkeysnoobjects(testobj, keysets):
+    res = str(Merge.groupbykeys([], keysets))
     print(res)
-    assert res == "[{'fname': 'a', 'lname': 'b', 'uid': 'hello'}, {'fname': 'a', 'lname': 'b', 'age': 27}, {'fname': 'a', 'lname': 'b', 'gid': 'world'}]"
+    assert res == "[{'key': {'fname': 'a', 'lname': 'b'}, 'values': []}, {'key': {'fname': 'a', 'lname': 'c'}, 'values': []}, {'key': {'fname': 'd', 'lname': 'e'}, 'values': []}, {'key': {'fname': 'f', 'lname': 'e'}, 'values': []}]"
+
+
+def testgroupkeysnokeysets(testobj):
+    res = str(Merge.groupbykeys(testobj, []))
+    print(res)
+    assert res == "[]"
+
+
+def testgroupkeysemptykeyset(testobj):
+    res = str(Merge.groupbykeys(testobj, json.loads('[{}]')))
+    print(res)
+    assert res == "[{'key': {}, 'values': " + str(testobj) + "}]"
+
+
+def testfinalmerge(testobj, keysets):
+    res = str(Merge.finalmerge(Merge.groupbykeys(testobj, keysets)))
+    print(res)
+    assert res == "[{'fname': 'a', 'lname': 'b', 'uid': 'hello', 'age': 27, 'gid': 'world'}, {'fname': 'a', 'lname': 'c', 'uid': 'hi', 'age': 22}, {'fname': 'd', 'lname': 'e', 'uid': 'soup', 'gid': 'liquid'}, {'fname': 'f', 'lname': 'e', 'age': 19}]"
+
+
+def testfullmerge(testobj, keys):
+    res = str(Merge.fullmerge(testobj, keys))
+    print(res)
+    assert res == "[{'fname': 'a', 'lname': 'b', 'uid': 'hello', 'age': 27, 'gid': 'world'}, {'fname': 'a', 'lname': 'c', 'uid': 'hi', 'age': 22}, {'fname': 'd', 'lname': 'e', 'uid': 'soup', 'gid': 'liquid'}, {'fname': 'f', 'lname': 'e', 'age': 19}]"
 
 
