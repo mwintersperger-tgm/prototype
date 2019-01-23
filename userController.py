@@ -50,6 +50,8 @@ class UserController:
         curline = 0
         names = []
         passwords = []
+        types = []
+        CCs = []
         with open("user.json", "r") as of:
             line = of.readline()
             for i in range(0,filelen-2):
@@ -57,13 +59,15 @@ class UserController:
                 list = line.split(":")
                 name,scrap = list[1].split(",")
                 pwd, scrap = list[2].split(",")
+                type, scrap = list[3].split(",")
+                CC = list[4].rstrip("}")
                 names.append(name.strip('"'))
                 passwords.append(pwd.strip('"'))
+                types.append(type.strip('"'))
+                CCs.append(CC.strip('"'))
         for i in range(0,len(passwords)):
             if names[i] == username and passwords[i] == password:
-                return True
-            else:
-                return False
+                return '{"name":"%s", "pswd":"%s", "type":"%s", "cc":"%s"}' % (names[i], passwords[i], types[i], CCs[i])
 
 
     def fileLength(self):
