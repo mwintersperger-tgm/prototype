@@ -1,5 +1,6 @@
 from etlController import ETLController
 from ruleController import RuleController
+from userController import UserController
 import argparse
 
 
@@ -12,6 +13,11 @@ def main():
     parser.add_argument("-sp", "--span", help="span of data entries", required=True)
     parser.add_argument("-cc", "--countrycode", help="the country code of the data file", required=True)
 
+    user = UserController()
+#    user.addUser("Michael","123Fiona","User","['AU','US']")
+    user.checkUser("Benjamin","2")
+    user.removeUser("Michael")
+"""
     args = parser.parse_args()
     rules = RuleController()
     rules.initRules()
@@ -29,7 +35,7 @@ def main():
     etl.setRules(args.data, args.rule)
     etl.simpleReplace(args.data, "birthday", {"-": "/"})
     etl.runRules(args.data, args.start, args.span)
-
+"""
 
 if __name__ == '__main__':
     main()
