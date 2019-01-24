@@ -98,7 +98,7 @@ class RuleController:
         :type: string
         :return: void
         """
-        self.rule_data += '{"label":"%s", "rule":"age", "pattern":%s, "separator":"%s", "depends":"%s"},\n' %(label, pattern, separator, depends)
+        self.rule_data += '{"label":"%s", "rule":"age", "pattern":"%s", "separator":"%s", "depends":"%s"},\n' %(label, pattern, separator, depends)
 
     def createDeadlineRule(self, label="age", depends="", pattern="%d-%m-%Y", separator="/"):
         """
@@ -113,7 +113,7 @@ class RuleController:
         :type: string
         :return: void
         """
-        self.rule_data += '{"label":"%s", "rule":"deadline", "pattern":%s, "separator":"%s", "depends":"%s"},\n' %(label, pattern, separator, depends)
+        self.rule_data += '{"label":"%s", "rule":"deadline", "pattern":"%s", "separator":"%s", "depends":"%s"},\n' %(label, pattern, separator, depends)
 
 
     def createBlankRule(self, label="blank"):

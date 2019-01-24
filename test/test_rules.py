@@ -61,6 +61,20 @@ class RulesCreation(unittest.TestCase):
             f.readline()
             self.assertEquals(f.readline(), "{\"label\":\"test\", \"rule\":\"blank\"}\n")
 
+    def test_ageRuleCreation(self):
+        self.rules.createAgeRule("test", "test1", "%d-%m-%Y", "-")
+        self.rules.createRulesFile("test.json")
+        with open("test.json", "r") as f:
+            f.readline()
+            self.assertEquals(f.readline(), "{\"label\":\"test\", \"rule\":\"age\", \"pattern\":\"%d-%m-%Y\", \"separator\":\"-\", \"depends\":\"test1\"}\n")
+
+    def test_deadlineRuleCreation(self):
+        self.rules.createDeadlineRule("test", "test1", "%d-%m-%Y", "-")
+        self.rules.createRulesFile("test.json")
+        with open("test.json", "r") as f:
+            f.readline()
+            self.assertEquals(f.readline(), "{\"label\":\"test\", \"rule\":\"deadline\", \"pattern\":\"%d-%m-%Y\", \"separator\":\"-\", \"depends\":\"test1\"}\n")
+
     def test_noCommaOnLastLine(self):
         self.rules.createBlankRule("test1")
         self.rules.createBlankRule("test2")
