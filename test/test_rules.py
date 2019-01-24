@@ -5,9 +5,6 @@ from ruleController import RuleController
 
 class RulesCreation(unittest.TestCase):
 
-    """
-    Test the textRule
-    """
     def setUp(self):
         self.rules = RuleController()
         self.rules.initRules()
