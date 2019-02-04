@@ -1,6 +1,8 @@
 import csv
 import json
 import os
+from pandas import DataFrame
+import pandas
 
 
 def forward(dataset, file):
@@ -164,3 +166,29 @@ def importcsv(infile, outfile, delim, mappingname = None):
         end_file(outfile)
         print(str(count) + " lines imported")
 
+
+def importxlsx(infile, outfile):
+    newfile = pandas.ExcelFile(infile)
+    file = pandas.read_excel(open(infile, 'rb'), sheet_name=newfile.sheet_names[0])
+    data = file.to_dict()
+    print('\n' + str(data))
+    keys = data.keys()
+    for x in keys:
+        keyslength = data[x].keys()
+        break
+    length = len(keyslength)
+    print(length)
+    print(keys)
+    arr = list()
+    for num in range(0, length):
+        obj = dict()
+        for y in keys:
+            obj[y] = dict()
+            obj[y]['value'] = data[y][num]
+            obj[y]['validated'] = False
+        arr.append(obj)
+    print(arr)
+    start_file(outfile)
+    for x in arr:
+        forward(x, outfile)
+    end_file(outfile)

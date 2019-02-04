@@ -3,6 +3,7 @@ import pytest
 import os
 import shutil
 import json
+from pandas import DataFrame
 
 
 @pytest.fixture()
@@ -51,6 +52,33 @@ def testmapping():
     obj["firstname"] = "fname"
     obj["lastname"] = "lname"
     yield obj
+
+
+@pytest.fixture()
+def resource3():
+    try:
+        os.mkdir(os.path.dirname(os.path.abspath(__file__)) + "\\tmp")
+    except Exception as err:
+        print(str(err))
+    cols = dict()
+    cols['fname'] = []
+    cols['lname'] = []
+    cols['fname'].append('Alexander')
+    cols['fname'].append('Michael')
+    cols['fname'].append('Thomas')
+    cols['fname'].append('Benjamin')
+    cols['lname'].append('Kramreiter')
+    cols['lname'].append('Wintersperger')
+    cols['lname'].append('Schweder')
+    cols['lname'].append('Rasic')
+    frame = DataFrame(cols)
+    path = os.path.dirname(os.path.abspath(__file__)) + "\\tmp\\file.xlsx"
+    frame.to_excel(path, sheet_name="test", index=False)
+    yield path
+    try:
+        shutil.rmtree(os.path.dirname(os.path.abspath(__file__)) + "\\tmp")
+    except Exception as err:
+        print(str(err))
 
 
 def test_startfile(resource):
@@ -108,7 +136,7 @@ def testvalidatemappingwrongtype(testmapping, resource2):
     assert not ImportCls.savemapping(testmapping, resource2)
 
 
-def testvalidatemappingempty(testmapping, resource2):
+def testvalidatemappingempty(resource2):
     print("failing to save empty mapping")
     assert not ImportCls.savemapping({}, resource2)
 
@@ -118,6 +146,7 @@ def testvalidatemappingdupe(testmapping, resource2):
     testmapping["secondname"] = "fname"
     print(testmapping)
     assert not ImportCls.savemapping(testmapping, resource2)
+
 
 def testvalidatemappingnotdict(resource2):
     print("failing to save mapping that isn't a dict")
@@ -152,3 +181,10 @@ def testloadforinvalidfile(resource2):
         file.write(json.dumps(obj))
     print("checking if invalid file is NOT loaded")
     assert ImportCls.loadmapping(resource2) is None
+
+
+def testimportxlsx(resource3):
+    ImportCls.importxlsx(resource3, resource3)
+    with open(resource3) as file:
+        res = json.loads(file.read())
+    assert res['values'] == [{'fname': {'value': 'Alexander', 'validated': False}, 'lname': {'value': 'Kramreiter', 'validated': False}}, {'fname': {'value': 'Michael', 'validated': False}, 'lname': {'value': 'Wintersperger', 'validated': False}}, {'fname': {'value': 'Thomas', 'validated': False}, 'lname': {'value': 'Schweder', 'validated': False}}, {'fname': {'value': 'Benjamin', 'validated': False}, 'lname': {'value': 'Rasic', 'validated': False}}]
