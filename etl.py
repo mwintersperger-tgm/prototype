@@ -32,7 +32,7 @@ def main():
 
     etl = ETLController()
     etl.setCC(args.data, args.countrycode)
-    etl.setRules(args.data, args.rule)
+    etl.setRule(args.data, args.rule)
     etl.simpleReplace(args.data, "birthday", {"-": "/"})
     etl.runRules(args.data, args.start, args.span)
 """
