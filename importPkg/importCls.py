@@ -21,11 +21,11 @@ def start_file(file):
 
 
 def validatemapping(mapping):
-    '''
+    """
     checks if a mapping has the appropriate structure
     :param mapping:
     :return:
-    '''
+    """
     if not isinstance(mapping, dict):
         return False
 
@@ -43,12 +43,12 @@ def validatemapping(mapping):
 
 
 def savemapping(mapping, outfile):
-    '''
+    """
     safes the mapping at the given path (outfile)
     :param mapping:
     :param outfile:
     :return:
-    '''
+    """
 
     if not validatemapping(mapping):
         return False
@@ -63,18 +63,19 @@ def savemapping(mapping, outfile):
 
 
 def loadmapping(infile):
-    '''
+    """
     returns the mapping at the given relative path. If the mapping isn't valid, returns None
     :param mapping:
     :param infile:
     :return:
-    '''
+    """
 
     with open(infile, "r") as file:
         tmp = json.loads(file.read())
         if not validatemapping(tmp):
             return None
         return tmp
+
 
 def end_file(file):
     with open(file, "a") as outfile:
@@ -128,7 +129,7 @@ def importcsv(infile, outfile, delim, mappingname = None):
     :param infile:
     :param outfile:
     :param delim:
-    :param mapping:
+    :param mappingname:
     :return:
     """
     with open(infile) as file:

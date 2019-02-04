@@ -1,30 +1,8 @@
 import json
 import csv
-import os
-import argparse
 from random import randint
 true = True
 false = False
-
-parser = argparse.ArgumentParser()
-
-parser.add_argument("-json", "--writejson", help="use this option to generate a JSON file in resources/data", action='store_true')
-
-parser.add_argument("-csv", "--writecsv", help="use this option to generate a CSV file in resources/data", action='store_true')
-
-parser.add_argument("-l", "--lines",
-                    help="Sets the amount of lines generated",
-                    type=int, required=False, default=-1, nargs='?', const=True)
-
-parser.add_argument("-csvn", "--csvname",
-                    help="Sets the name and location of the generated csv file",
-                    type=str, required=False, default="../resources/data/result.csv", nargs='?', const=True)
-
-parser.add_argument("-jsonn", "--jsonname",
-                    help="Sets the name and location of the generated json file",
-                    type=str, required=False, default="../resources/data/result.csv", nargs='?', const=True)
-
-args = parser.parse_args()
 
 
 def generate(generator):
@@ -61,56 +39,85 @@ def generate(generator):
         return "hi"
 
 
-if __name__ == '__main__':
-    colums = {}
+def lel(argsin):
+    try:
+        ret = argsin['return']
+    except KeyError:
+        ret = False
     with open("../resources/param.json") as file:
         columns = json.load(file)
-    print(json.dumps(columns))
     result = []
     ccsv = columns['createcsv']
-    if args.writecsv:
-        ccsv = True
+    try:
+        if argsin['writecsv']:
+            ccsv = True
+    except KeyError:
+        pass
     cjson = columns['createjson']
-    if args.writejson:
-        cjson = True
+    try:
+        if argsin['writejson']:
+            cjson = True
+    except KeyError:
+        pass
     delim = columns['delimiter']
-    if isinstance(delim, int):
-        delim = chr(delim)
-    delete = false
-    jsonloc = args.jsonname
-    csvloc = args.csvname
-    lines = columns['lines']
-    if args.lines > 0:
-        lines = args.lines
-    with open(csvloc, "a") as csvfile:
-        w = None
-        if ccsv:
-            csvfile.truncate(0)
-            w = csv.writer(csvfile, delimiter=delim)
-        linecount = 0
+    try:
+        if isinstance(delim, int):
+            delim = chr(delim)
+    except KeyError:
+        pass
+    try:
+        jsonloc = argsin['jsonname']
+    except KeyError:
+        pass
+    try:
+        csvloc = argsin['csvname']
+    except KeyError:
+        pass
+    try:
+        if argsin['lines'] > 0:
+            lines = argsin['lines']
+    except KeyError:
+        lines = columns['lines']
+    try:
+        param = argsin['param']
+    except KeyError:
+        param = columns['param']
+    if ccsv:
+        with open(csvloc, "a") as csvfile:
+            w = None
+            if ccsv:
+                csvfile.truncate(0)
+                w = csv.writer(csvfile, delimiter=delim)
+            linecount = 0
+            for i in range(0, lines):
+                newres = {}
+                for x in param:
+                    newres[x['propname']] = generate(x['generator'])
+                    pass
+                # result.append(newres)
+                if linecount == 0:
+                    if ccsv:
+                        w.writerow(newres.keys())
+                if ccsv:
+                    w.writerow(newres.values())
+                if cjson or ret:
+                    result.append(newres)
+                linecount += 1
+    else:
         for i in range(0, lines):
             newres = {}
-            for x in columns['param']:
+            for x in param:
                 newres[x['propname']] = generate(x['generator'])
                 pass
             # result.append(newres)
-            if linecount == 0:
-                if ccsv:
-                    w.writerow(newres.keys())
-            print(newres)
-            print("linecount: " + str(linecount+1))
-            if ccsv:
-                w.writerow(newres.values())
-            if cjson:
+            if cjson or ret:
                 result.append(newres)
-            linecount += 1
 
-    if not ccsv:
-        if os.stat(csvloc).st_size <= 0:
-            os.remove(csvloc)
-
-    # print(json.dumps(result))
     if cjson:
         with open(jsonloc, "w") as file:
             file.truncate(0)
             file.write(json.dumps(result))
+
+    if ret:
+        return result
+

@@ -1,3 +1,5 @@
+import json
+import os
 
 
 def keysonly(obj, keyset):
@@ -201,3 +203,56 @@ def fullmerge(objects, keyset):
         tmp2 = getkeygroup(objects, x)
         out.append(mergelinerisky(tmp2))
     return out
+
+
+def memconservingmerge(filepaths, keyset, outfile):
+    key = list()
+    for filepath in filepaths:
+        with open(filepath, "r") as file:
+            file.readline()
+            try:
+                while True:
+                    s = file.readline()
+                    if s[len(s) - 2] == ',':
+                        obj = json.loads(s[:-2])
+                    else:
+                        obj = json.loads(s)
+                    for x in obj.keys():
+                        obj[x] = obj[x]['value']
+                    obj2 = keysonly(obj, keyset)
+                    if obj2 not in key:
+                        key.append(obj2)
+            except Exception as err:
+                print(err)
+                pass
+    print('Final Keys: ' + str(key) + '; length: ' + str(len(key)))
+    with open(outfile, "a") as file:
+        file.write('{"rules":"", "values":[\n')
+    for k in key:
+        tempobj = k
+        for filepath in filepaths:
+            with open(filepath, "r") as file:
+                file.readline()
+                try:
+                    while True:
+                        s = file.readline()
+                        if s[len(s) - 2] == ',':
+                            obj = json.loads(s[:-2])
+                        else:
+                            obj = json.loads(s)
+                        for x in obj.keys():
+                            obj[x] = obj[x]['value']
+                        if keyalign(k, obj, keyset):
+                            tempobj = mergelinerisky([tempobj, obj])
+                except Exception as err:
+                    pass
+        print('outobj: ' + str(tempobj))
+        try:
+            with open(outfile, "a") as file:
+                file.write(json.dumps(tempobj)+',\n')
+        except Exception as err:
+            pass
+    with open(outfile, "a") as file:
+        file.truncate(os.path.getsize(outfile) - 3)
+        file.write('\n]}')
+

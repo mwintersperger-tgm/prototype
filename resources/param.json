@@ -1,7 +1,7 @@
 {
 	"createjson":false,
 	"createcsv":false,
-	"lines":25000,
+	"lines":100,
 	"delimiter":"|",
 	"param":[
 		{
