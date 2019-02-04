@@ -1,0 +1,4 @@
+{"users":[
+{"name":"Benjamin", "pswd":"2", "type":"Observer", "cc":"['EN','AU']"},
+{"name":"Alexander", "pswd":"3", "type":"User", "cc":"['EN','AU']"}
+]}

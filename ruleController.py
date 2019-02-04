@@ -85,6 +85,17 @@ class RuleController:
         """
         self.rule_data += '{"label":"%s", "rule":"dependency", "dict":%s, "depends":"%s"},\n' %(label,str(dict).replace("'","\""), depends)
 
+    def createPatternRule(self, label="pattern", pattern="[0-9A-Fa-f]*"):
+        """
+        This function appends a line defining a patternRule to the list
+        :param label: the label of the data entry this rule applies to
+        :type: string
+        :param pattern: ReGex Pattern to be applied to this rule
+        :type: string
+        :return: void
+        """
+        self.rule_data += '{"label":"%s", "rule":"pattern", "pattern":"%s"},\n' %(label,pattern)
+
     def createAgeRule(self, label="age", depends="", pattern="%d-%m-%Y", separator="/"):
         """
         This function appends a line defining a ageRule to the list
@@ -98,7 +109,7 @@ class RuleController:
         :type: string
         :return: void
         """
-        self.rule_data += '{"label":"%s", "rule":"age", "pattern":%s, "separator":"%s", "depends":"%s"},\n' %(label, pattern, separator, depends)
+        self.rule_data += '{"label":"%s", "rule":"age", "pattern":"%s", "separator":"%s", "depends":"%s"},\n' %(label, pattern, separator, depends)
 
     def createDeadlineRule(self, label="age", depends="", pattern="%d-%m-%Y", separator="/"):
         """
@@ -113,7 +124,7 @@ class RuleController:
         :type: string
         :return: void
         """
-        self.rule_data += '{"label":"%s", "rule":"deadline", "pattern":%s, "separator":"%s", "depends":"%s"},\n' %(label, pattern, separator, depends)
+        self.rule_data += '{"label":"%s", "rule":"deadline", "pattern":"%s", "separator":"%s", "depends":"%s"},\n' %(label, pattern, separator, depends)
 
 
     def createBlankRule(self, label="blank"):
