@@ -1,7 +1,7 @@
 import csv
 import json
 import os
-from pandas import DataFrame
+import exportPkg.merge as Merge
 import pandas
 
 
@@ -67,7 +67,6 @@ def savemapping(mapping, outfile):
 def loadmapping(infile):
     """
     returns the mapping at the given relative path. If the mapping isn't valid, returns None
-    :param mapping:
     :param infile:
     :return:
     """
@@ -87,8 +86,11 @@ def end_file(file):
 
 def importcsv2(args):
     cfg = {}
-    with open("../resources/inconfig.json") as file:
-        cfg = json.load(file)
+    try:
+        with open("../resources/inconfig.json") as file:
+            cfg = json.load(file)
+    except Exception as err:
+        print(err)
     if isinstance(cfg['delimiter'], int):
         cfg['delimiter'] = chr(cfg['delimiter'])
     if len(args.delimiter) > 0:
@@ -122,7 +124,7 @@ def importcsv2(args):
         print(str(count) + " lines imported")
 
 
-def importcsv(infile, outfile, delim, mappingname = None):
+def importcsv(infile, outfile, delim, mappingname=None):
     """
     Imports the infile (CSV) into a JSON structure that should be usable for the rest of the project.
     The JSON will be saved in the outfile.
@@ -137,7 +139,8 @@ def importcsv(infile, outfile, delim, mappingname = None):
     with open(infile) as file:
         if mappingname is not None:
             mapping = loadmapping(mappingname)
-
+        else:
+            mapping = None
         start_file(outfile)
         colnames = []
         read = csv.reader(file, delimiter=delim)
@@ -168,11 +171,19 @@ def importcsv(infile, outfile, delim, mappingname = None):
 
 
 def importxlsx(infile, outfile):
+    """
+    imports data from an .xlsx and adapts it into the internally used JSON structure. Due to the way pandas internally
+    works, this isn't particularly memory conserving
+    :param infile:
+    :param outfile:
+    :return:
+    """
     newfile = pandas.ExcelFile(infile)
     file = pandas.read_excel(open(infile, 'rb'), sheet_name=newfile.sheet_names[0])
     data = file.to_dict()
     print('\n' + str(data))
     keys = data.keys()
+    keyslength = 0
     for x in keys:
         keyslength = data[x].keys()
         break
@@ -188,6 +199,65 @@ def importxlsx(infile, outfile):
             obj[y]['validated'] = False
         arr.append(obj)
     print(arr)
+    start_file(outfile)
+    for x in arr:
+        forward(x, outfile)
+    end_file(outfile)
+
+
+def importxlsxmerge(infile, outfile, keyset):
+    """
+    Does the same as the other xlsx import, but with the slight difference that it assumes that there's already a JSON
+    structure at the outfile location. I recommend checking if a file exists at the "outfile" location and then use
+    either this method or importxlsx
+    :param infile:
+    :param outfile:
+    :param keyset:
+    :return:
+    """
+    newfile = pandas.ExcelFile(infile)
+    file = pandas.read_excel(open(infile, 'rb'), sheet_name=newfile.sheet_names[0])
+    data = file.to_dict()
+    print('\n' + str(data))
+    keys = data.keys()
+    keyslength = 0
+    for x in keys:
+        keyslength = data[x].keys()
+        break
+    length = len(keyslength)
+    print(length)
+    print(keys)
+    arr = list()
+    for num in range(0, length):
+        obj = dict()
+        for y in keys:
+            obj[y] = dict()
+            obj[y]['value'] = data[y][num]
+            obj[y]['validated'] = False
+        arr.append(obj)
+    print(arr)
+    prevarr = list()
+    with open(outfile) as file:
+        file.readline()
+        try:
+            while True:
+                x = file.readline()
+                if x[len(x) - 2] == ',':
+                    obj = json.loads(x[:-2])
+                else:
+                    obj = json.loads(x)
+                prevarr.append(obj)
+        except Exception as err:
+            print(err)
+    for x in prevarr:
+        align = False
+        for y in arr:
+            if Merge.keyalign(x, y, keyset):
+                align = True
+                x = Merge.mergelinerisky([y, x])
+                break
+        if not align:
+            arr.append(x)
     start_file(outfile)
     for x in arr:
         forward(x, outfile)
