@@ -20,6 +20,19 @@ class ETLController:
     It allows you to change the rule file applied to a data file, change the CC of a data file,
     load the rules applied to a data file and validate data.
     """
+
+    def getLabels(self,filename):
+        rulename = self.getRule(filename)
+        filelen = self.fileLength(rulename)
+        rules = []
+        with open(rulename, "r") as f:
+            f.readline()
+            # we ignore the 'header' and the closing line
+            for i in range(1, filelen-1):
+                rule = json.loads(f.readline().rstrip(",\n"))
+                rules.append(rule["label"])
+        return rules
+
     def loadRules(self, filename):
         """
         This functions reads the rules applied to a data file out of the rule file applied to it,
@@ -67,6 +80,19 @@ class ETLController:
                 elif rule["rule"] == "blank":
                     self.rules.append(BlankRule(str(rule["label"])))
 
+    def getCC(self, filename):
+        """
+        This function returns the cc of the data file
+        :param filename: the name/path of the data file
+        :type: string
+        :return: void
+        """
+        filelen = self.fileLength(filename)
+        with open("%s" % filename, "r") as of:
+            line = str(of.readline())
+            cc = line[line.find(',')+8:line.rfind(",")-1]
+        return cc
+
     def setCC(self, filename, cc):
         """
         This function changes the cc of the data file
@@ -96,7 +122,7 @@ class ETLController:
         os.remove(filename)
         os.rename(newfile, filename)
 
-    def setRules(self, filename, rule):
+    def setRule(self, filename, rule):
         """
         This function changes the rule file applied to a data file
         :param filename: the name/path of the data file
