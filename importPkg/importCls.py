@@ -27,7 +27,7 @@ def start_file(file, countrycode=0, lockedrows=list()):
     """
     with open(file, "w") as outfile:
         outfile.truncate(0)
-        outfile.write('{"rules":"", "cc":"' + str(countrycode) + '", "locked":"' + str(lockedrows) + '"), "values":[\n')
+        outfile.write('{"rules":"", "cc":"' + str(countrycode) + '", "locked":' + json.dumps(lockedrows) + ', "values":[\n')
 
 
 def validatemapping(mapping):
