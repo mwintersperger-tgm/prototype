@@ -2,6 +2,7 @@ import csv
 import json
 import os
 import exportPkg.merge as Merge
+
 import pandas
 
 
@@ -16,15 +17,22 @@ def forward(dataset, file):
     pass
 
 
-def start_file(file):
+def start_file(file, countrycode=0, lockedrows=list()):
+    """
+
+    :param file:
+    :param countrycode:
+    :param lockedrows:
+    :return:
+    """
     with open(file, "w") as outfile:
         outfile.truncate(0)
-        outfile.write('{"rules":"", "cc":"", "values":[\n')
+        outfile.write('{"rules":"", "cc":"' + str(countrycode) + '", "locked":"' + str(lockedrows) + '"), "values":[\n')
 
 
 def validatemapping(mapping):
     """
-    checks if a mapping has the appropriate structure
+    checks if a mapping has the appropriate structure. This means that each key has
     :param mapping:
     :return:
     """
@@ -33,13 +41,21 @@ def validatemapping(mapping):
 
     dupe = []
     for x in mapping.keys():
-        if not isinstance(mapping[x], str):
-            return False
-        else:
-            if mapping[x] in dupe:
+        if x != '__locked__':
+            if not isinstance(mapping[x], str):
                 return False
             else:
-                dupe.append(mapping[x])
+                if mapping[x] in dupe:
+                    return False
+                else:
+                    dupe.append(mapping[x])
+
+    try:
+        if not isinstance(mapping['__locked__'], list):
+            return False
+    except Exception as err:
+        print(err)
+        return False
 
     return True
 
@@ -124,16 +140,18 @@ def importcsv2(args):
         print(str(count) + " lines imported")
 
 
-def importcsv(infile, outfile, delim, mappingname=None):
+def importcsv(infile, outfile, delim, mappingname=None, countrycode=0):
     """
     Imports the infile (CSV) into a JSON structure that should be usable for the rest of the project.
     The JSON will be saved in the outfile.
     The default delimiter is ';', but it can be changed.
     if mapping is used, it should have the following structure: {"colname" = "mappedname", "colname2" = "mappedname2", [..]}
+    countrycode is needed to assign a cc to the file (can be left empty)
     :param infile:
     :param outfile:
     :param delim:
     :param mappingname:
+    :param countrycode:
     :return:
     """
     with open(infile) as file:
@@ -141,7 +159,11 @@ def importcsv(infile, outfile, delim, mappingname=None):
             mapping = loadmapping(mappingname)
         else:
             mapping = None
-        start_file(outfile)
+        locked = list()
+        if mapping is not None:
+            locked = mapping['__locked__']
+            mapping.pop('__locked__')
+        start_file(outfile, countrycode, locked)
         colnames = []
         read = csv.reader(file, delimiter=delim)
         count = 0
@@ -238,7 +260,10 @@ def importxlsxmerge(infile, outfile, keyset):
     print(arr)
     prevarr = list()
     with open(outfile) as file:
-        file.readline()
+        string = file.readline()
+        obj = json.loads(string + ']}')
+        locked = obj['locked']
+        cc = obj['cc']
         try:
             while True:
                 x = file.readline()
@@ -258,7 +283,7 @@ def importxlsxmerge(infile, outfile, keyset):
                 break
         if not align:
             arr.append(x)
-    start_file(outfile)
+    start_file(outfile, cc, locked)
     for x in arr:
         forward(x, outfile)
     end_file(outfile)
