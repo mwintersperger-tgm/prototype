@@ -126,6 +126,14 @@ class RuleController:
         """
         self.rule_data += '{"label":"%s", "rule":"deadline", "pattern":"%s", "separator":"%s", "depends":"%s"},\n' %(label, pattern, separator, depends)
 
+    def createIdRule(self, label="id", digits = 0):
+        """
+        This function appends a line defining a idRule to the list
+        :param label: the label of the data entry this rule applies to
+        :type: string
+        :return: void
+        """
+        self.rule_data += '{"label":"%s", "rule":"id", "digits":"%s"},\n' % (label, digits)
 
     def createBlankRule(self, label="blank"):
         """
