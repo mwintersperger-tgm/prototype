@@ -25,4 +25,5 @@ args = parser.parse_args()
 
 
 if __name__ == '__main__':
-    generate.lel(args)
+    print(str(args))
+    generate.lel(vars(args))
