@@ -1,5 +1,6 @@
 import json
 import os
+import  importPkg.util as util
 
 
 def keysonly(obj, keyset):
@@ -212,11 +213,7 @@ def memconservingmerge(filepaths, keyset, outfile):
             file.readline()
             try:
                 while True:
-                    s = file.readline()
-                    if s[len(s) - 2] == ',':
-                        obj = json.loads(s[:-2])
-                    else:
-                        obj = json.loads(s)
+                    obj = util.parseline(file.readline())
                     for x in obj.keys():
                         obj[x] = obj[x]['value']
                     obj2 = keysonly(obj, keyset)
