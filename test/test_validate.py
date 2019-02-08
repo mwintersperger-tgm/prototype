@@ -9,6 +9,7 @@ from rules.dependencyRule import DependencyRule
 from rules.blankRule import BlankRule
 from rules.ageRule import AgeRule
 from rules.deadlineRule import DeadlineRule
+from rules.idRule import IdRule
 
 
 class RulesValidation(unittest.TestCase):
@@ -305,3 +306,19 @@ class RulesValidation(unittest.TestCase):
     def test_deadlineRuleGetDepends(self):
         deadlinerule = DeadlineRule("test", "test1", "%d-%m-%Y", "-")
         self.assertEquals(deadlinerule.getDepends(), "test1")
+
+    """
+    Test the id Rule
+    """
+
+    def test_idRule(self):
+        idrule = IdRule("test", "5")
+        self.assertEquals(idrule.validate("100"),"00100")
+
+    def test_idRuleToLong(self):
+        idrule = IdRule("test", "5")
+        self.assertEquals(idrule.validate("100000"),"100000")
+
+    def test_idRuleGetLabel(self):
+        idrule = IdRule("test", "5")
+        self.assertEquals(idrule.getLabel(), "test")

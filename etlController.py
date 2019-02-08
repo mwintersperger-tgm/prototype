@@ -8,6 +8,7 @@ from rules.dependencyRule import DependencyRule
 from rules.blankRule import BlankRule
 from rules.ageRule import AgeRule
 from rules.deadlineRule import DeadlineRule
+from rules.idRule import IdRule
 
 import json
 import os
@@ -76,6 +77,9 @@ class ETLController:
 
                 elif rule["rule"] == "deadline":
                     self.rules.append(DeadlineRule(str(rule["label"]), rule["depends"], str(rule["pattern"]), str(rule["separator"])))
+
+                elif rule["rule"] == "id":
+                    self.rules.append(IdRule(str(rule["label"]), int(rule["digits"])))
 
                 elif rule["rule"] == "blank":
                     self.rules.append(BlankRule(str(rule["label"])))
@@ -227,8 +231,9 @@ class ETLController:
                                 data[self.rules[j].getLabel()]["validated"] = "False"
                             else:
                                 data[self.rules[j].getLabel()]["validated"] = "True"
-
-
+                        elif (str(self.rules[j])[str(self.rules[j]).find('.')+1:str(self.rules[j]).find('R')]) == "id":
+                            data[self.rules[j].getLabel()]["validated"] = str(self.rules[j].validate(data[self.rules[j].getLabel()]["value"]))
+                            data[self.rules[j].getLabel()]["validated"] = "True"
                         else:
                             # set the validation of the current data entry
                             data[self.rules[j].getLabel()]["validated"] = str(self.rules[j].validate(data[self.rules[j].getLabel()]["value"]))
