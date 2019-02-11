@@ -251,6 +251,16 @@ class ETLController:
         os.rename(newfile, filename)
 
     def simpleReplace(self, filename, col = "", replace = {}):
+        """
+        This method is a simple function that replaces text with other text in a column
+        :param filename: The Path to the file
+        :type String
+        :param col: The Column the replace is supposed to run over
+        :type String
+        :param replace: a dictionary of the changes to be made
+        :type dictionary
+        :return: void
+        """
         filelen = self.fileLength(filename)
         curline = 0
         # the newfile has the same path as the old one but its name gets a "new_" added to it

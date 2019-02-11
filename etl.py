@@ -14,10 +14,11 @@ def main():
     parser.add_argument("-cc", "--countrycode", help="the country code of the data file", required=True)
 
     user = UserController()
-    user.addUser("Michael","123Fiona","User","['AU','US']")
-    print(user.checkUser("Benjamin","2"))
-    user.removeUser("Michael")
-"""
+    user.filesOfUser('.','EN')
+    #user.addUser("Michael","123Fiona","User","['AU','US']")
+    #print(user.checkUser("Benjamin","2"))
+    #user.removeUser("Michael")
+"""    
     args = parser.parse_args()
     rules = RuleController()
     rules.initRules()

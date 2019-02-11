@@ -6,7 +6,22 @@ import os
 class UserController:
 
     def addUser(self,name,passwd,type,CC):
+        """
+        This method adds a new user to the System as long as its userame is unique
+        :param name: the name of the new user
+        :type String
+        :param passwd: the hashed password of the user
+        :type String
+        :param type: the type of the user
+        :type String
+        :param CC: the country code of the new user
+        :type String
+        :return: A message depending on success or failure
+        """
         filelen = self.fileLength()
+        users = self.listUsernames(filelen)
+        if name in users:
+            return "failure"
         curline = 0
         with open("user.json", "r") as of:
             line = of.readline()
@@ -23,8 +38,32 @@ class UserController:
                 nf.write(']}')
         os.remove("user.json")
         os.rename("newuser.json", "user.json")
+        return "success"
+
+    def listUsernames(self,filelen):
+        """
+        This method returns a list of usernames
+        :param filelen:
+        :type int
+        :return: list of usernames
+        """
+        users = []
+        with open("user.json", "r") as of:
+            line = of.readline()
+            for i in range(0, filelen-2):
+                line = of.readline()
+                name = line[line.find(':')+2:line.find(',')-1]
+                users.append(name)
+        return users
+
 
     def removeUser(self,name):
+        """
+        This method removes the user with the gives username
+        :param name: the name of the user to be removed
+        :type String
+        :return: void
+        """
         filelen = self.fileLength()
         curline = 0
         with open("user.json", "r") as of:
@@ -46,6 +85,14 @@ class UserController:
         os.rename("newuser.json", "user.json")
 
     def checkUser(self,username,password):
+        """
+        This method checks of the given username and password is proper and returns the information of the user if yes and a small message of no
+        :param username: the given username to be checked
+        :type String
+        :param password: the given hashed password to be checked
+        :return: A list of the user information if successful
+        :return: A failure message if not successful
+        """
         filelen = self.fileLength()
         curline = 0
         names = []
@@ -68,7 +115,19 @@ class UserController:
         for i in range(0,len(passwords)):
             if names[i] == username and passwords[i] == password:
                 return '{"name":"%s", "pswd":"%s", "type":"%s", "cc":"%s"}' % (names[i], passwords[i], types[i], CCs[i])
+        return "failure"
 
+    def filesOfUser(self,directory,CC):
+        """
+        This Method returns a list of files the user can access with his CC
+        :param directory: the directory to be looked through
+        :param CC: the country code to be checked with
+        :return: a list of files
+        """
+        file_names = [fn for fn in os.listdir(directory)
+                      if "data"+CC in fn]
+        print(file_names)
+        return "bla"
 
     def fileLength(self):
         """
