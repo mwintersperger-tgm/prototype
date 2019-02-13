@@ -1,5 +1,5 @@
 from datetime import datetime
-
+import os
 
 from etlController import ETLController
 from shutil import copyfile
@@ -33,6 +33,8 @@ def main():
     print("---------------------")
     print("Time to validate ten thousand lines: %s seconds" % time)
     print("---------------------")
+
+    os.remove("benchmark.json")
 
 if __name__ == '__main__':
     main()

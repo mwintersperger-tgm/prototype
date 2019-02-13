@@ -19,3 +19,4 @@ resources/data/
 *.pyc
 
 test/tmp/
+test/benchmark_ori.json
