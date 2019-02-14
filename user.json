@@ -1,5 +1,4 @@
 {"users":[
 {"name":"Benjamin", "pswd":"2", "type":"Observer", "cc":"['EN','AU']"},
-{"name":"Alexander", "pswd":"3", "type":"User", "cc":"['EN','AU']"},
-{"name":"Michael", "pswd":"123Fiona", "type":"User", "cc":"['AU','US']"}
+{"name":"Alexander", "pswd":"3", "type":"User", "cc":"['EN','AU']"}
 ]}

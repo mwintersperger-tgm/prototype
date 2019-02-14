@@ -19,6 +19,7 @@ class UserController:
         :return: A message depending on success or failure
         """
         filelen = self.fileLength()
+        # Get a list of usernames and check if the name of the new user is unique, return a failure message if it is not
         users = self.listUsernames(filelen)
         if name in users:
             return "failure"
@@ -27,17 +28,20 @@ class UserController:
             line = of.readline()
             curline += 1
             with open("newuser.json", "w") as nf:
+                # Write the header
                 nf.write("%s" % line)
-                for i in range(0, filelen-3):
-                    line = of.readline()
+                for i in range(0, filelen-2):
+                    # Write the existing users, this setup is to add a ',' to the formerly newest user
+                    line = of.readline().rstrip(",\n")
                     curline += 1
-                    nf.write(line)
-                line = of.readline()
-                nf.write("%s,\n" % line.rstrip("\n"))
+                    nf.write("%s,\n" % line)
+                # Write the new user and the end if file
                 nf.write('{"name":"%s", "pswd":"%s", "type":"%s", "cc":"%s"}\n' % (name,passwd,type,CC))
                 nf.write(']}')
+        # remove the old file and rename the new file to the old one
         os.remove("user.json")
         os.rename("newuser.json", "user.json")
+        # Return a success message if everything worked
         return "success"
 
     def listUsernames(self,filelen):

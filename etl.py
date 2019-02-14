@@ -14,29 +14,28 @@ def main():
 
     args = parser.parse_args()
 
-    etl = ETLController()
-    etl.setLocked(args.data, ["firstname", "lastname"])
+#    etl = ETLController()
+#    etl.setLocked(args.data, ["firstname", "lastname"])
 #    etl.setRule(args.data, args.rule)
 #    etl.simpleReplace(args.data, "birthday", {"-": "/"})
 #    etl.runRules(args.data, args.start, args.span)
 
-    #user = UserController()
-    #user.filesOfUser('.','EN')
-    #user.addUser("Michael","123Fiona","User","['AU','US']")
-    #print(user.checkUser("Benjamin","2"))
-    #user.removeUser("Michael")
-"""    
-    rules = RuleController()
-    rules.initRules()
-    rules.createTextRule("firstname", 0, 10, ["*"])
-    rules.createTextRule("lastname", 0, 10, [])
-    rules.createNumberRule("age", 18, 25)
-    rules.createListRule("job", ["Programmierer", "Anwalt"])
-    rules.createDependencyRule("income", {"Anwalt": 500, "Programmierer": 1000}, "job")
-    rules.createDateRule("birthday", "%d-%m-%Y", "-")
-    rules.createEmailRule("email", "at")
-    rules.createRulesFile(args.rule)
-"""
+    user = UserController()
+    user.addUser("Michael","123Fiona","User","['AU','US']")
+    user.filesOfUser('.','EN')
+    print(user.checkUser("Benjamin","2"))
+    user.removeUser("Michael")
+
+   # rules = RuleController()
+   # rules.initRules()
+   # rules.createTextRule("firstname", 0, 10, ["*"])
+   # rules.createTextRule("lastname", 0, 10, [])
+   # rules.createNumberRule("age", 18, 25)
+   # rules.createListRule("job", ["Programmierer", "Anwalt"])
+   # rules.createDependencyRule("income", {"Anwalt": 500, "Programmierer": 1000}, "job")
+   # rules.createDateRule("birthday", "%d-%m-%Y", "-")
+   # rules.createEmailRule("email", "at")
+   # rules.createRulesFile(args.rule)
 
 
 
