@@ -11,15 +11,21 @@ def main():
     parser.add_argument("-r", "--rule", help="path to the rule file", required=True)
     parser.add_argument("-st", "--start", help="from which data entry index", required=True)
     parser.add_argument("-sp", "--span", help="span of data entries", required=True)
-    parser.add_argument("-cc", "--countrycode", help="the country code of the data file", required=True)
 
-    user = UserController()
-    user.filesOfUser('.','EN')
+    args = parser.parse_args()
+
+    etl = ETLController()
+    etl.setLocked(args.data, ["firstname", "lastname"])
+#    etl.setRule(args.data, args.rule)
+#    etl.simpleReplace(args.data, "birthday", {"-": "/"})
+#    etl.runRules(args.data, args.start, args.span)
+
+    #user = UserController()
+    #user.filesOfUser('.','EN')
     #user.addUser("Michael","123Fiona","User","['AU','US']")
     #print(user.checkUser("Benjamin","2"))
     #user.removeUser("Michael")
 """    
-    args = parser.parse_args()
     rules = RuleController()
     rules.initRules()
     rules.createTextRule("firstname", 0, 10, ["*"])
@@ -30,13 +36,9 @@ def main():
     rules.createDateRule("birthday", "%d-%m-%Y", "-")
     rules.createEmailRule("email", "at")
     rules.createRulesFile(args.rule)
-
-    etl = ETLController()
-    etl.setCC(args.data, args.countrycode)
-    etl.setRule(args.data, args.rule)
-    etl.simpleReplace(args.data, "birthday", {"-": "/"})
-    etl.runRules(args.data, args.start, args.span)
 """
+
+
 
 if __name__ == '__main__':
     main()

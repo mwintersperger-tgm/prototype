@@ -20,6 +20,7 @@ class ListRule():
             return validated
         except:
             return validated
+
     def getLabel(self):
         """
         return the label the the data entry this rule applies to

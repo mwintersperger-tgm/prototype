@@ -84,7 +84,7 @@ class ETLController:
                 elif rule["rule"] == "blank":
                     self.rules.append(BlankRule(str(rule["label"])))
 
-    def getCC(self, filename):
+    def getLocked(self, filename):
         """
         This function returns the cc of the data file
         :param filename: the name/path of the data file
@@ -97,7 +97,7 @@ class ETLController:
             cc = line[line.find(',')+8:line.rfind(",")-1]
         return cc
 
-    def setCC(self, filename, cc):
+    def setLocked(self, filename, locked=[]):
         """
         This function changes the cc of the data file
         :param filename: the name/path of the data file
@@ -115,7 +115,7 @@ class ETLController:
             rule = temp[10:temp.find(",")-1]
             with open("%s" % newfile, "w") as nf:
                 # write the header with the new rules
-                line = '{"rules":"%s", "cc":"%s", "values":[\n' % (rule, cc)
+                line = '{"rules":"%s", "locked":"%s", "values":[\n' % (rule, locked)
                 nf.write(line)
 
                 # write the rest
