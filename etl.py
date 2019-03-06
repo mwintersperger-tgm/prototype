@@ -22,9 +22,9 @@ def main():
 #    etl.runRules(args.data, args.start, args.span)
 
     user = UserController()
-    print(user.addUser("Michael","123Fiona","User","['AU','AU']"))
+  #  print(user.addUser("Michael","123Fiona","User","['AU','AU']"))
  #   user.filesOfUser('.','EN')
- #   print(user.checkUser("Benjamin","2"))
+    print(user.checkUser("Benjamin","2"))
  #   user.removeUser("Michael")
 
    # rules = RuleController()

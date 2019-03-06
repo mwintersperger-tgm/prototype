@@ -113,7 +113,7 @@ class UserController:
                 name,scrap = list[1].split(",")
                 pwd, scrap = list[2].split(",")
                 type, scrap = list[3].split(",")
-                CC = list[4].rstrip("}")
+                CC = list[4].rstrip("},")
                 names.append(name.strip('"'))
                 passwords.append(pwd.strip('"'))
                 types.append(type.strip('"'))
