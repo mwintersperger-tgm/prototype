@@ -27,3 +27,13 @@ def fetchtablenames(folder):
         if lastnumindex >= 0 and x.index('.') >= 0:
             output.append(x[lastnumindex+1:x.index('.')])
     return output
+
+
+def fetchtnameforfile(filename):
+    lastnumindex = -1
+    for i in range(0, len(filename)):
+        char = ord(list(filename)[i])
+        if char >= ord('0') and char <= ord('9'):
+            lastnumindex = i
+    if lastnumindex >= 0 and filename.index('.') >= 0:
+        return filename[lastnumindex + 1:filename.index('.')]
