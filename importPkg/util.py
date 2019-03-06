@@ -15,6 +15,15 @@ def parsefirstline(line):
 
 
 def fetchtablenames(folder):
-    onlyfiles = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
+    onlyfiles = os.listdir(folder)
+    print(onlyfiles)
+    output = list()
     for x in onlyfiles:
-        print(x)
+        lastnumindex = -1
+        for i in range(0,len(x)):
+            char = ord(list(x)[i])
+            if char >= ord('0') and char <= ord('9'):
+                lastnumindex = i
+        if lastnumindex >= 0 and x.index('.') >= 0:
+            output.append(x[lastnumindex+1:x.index('.')])
+    return output
