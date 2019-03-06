@@ -86,7 +86,7 @@ class ETLController:
 
     def getLocked(self, filename):
         """
-        This function returns the cc of the data file
+        This function returns the locked entries of the data file
         :param filename: the name/path of the data file
         :type: string
         :return: void
@@ -99,10 +99,10 @@ class ETLController:
 
     def setLocked(self, filename, locked=[]):
         """
-        This function changes the cc of the data file
+        This function changes the locked entries of the data file
         :param filename: the name/path of the data file
         :type: string
-        :param cc: the new cc of the data file
+        :param locked: the new entreis of the data file to be locked
         :type: string
         :return: void
         """

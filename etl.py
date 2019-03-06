@@ -15,16 +15,17 @@ def main():
     args = parser.parse_args()
 
 #    etl = ETLController()
+#    print(etl.getLabels(args.data))
 #    etl.setLocked(args.data, ["firstname", "lastname"])
 #    etl.setRule(args.data, args.rule)
 #    etl.simpleReplace(args.data, "birthday", {"-": "/"})
 #    etl.runRules(args.data, args.start, args.span)
 
     user = UserController()
-    user.addUser("Michael","123Fiona","User","['AU','US']")
-    user.filesOfUser('.','EN')
-    print(user.checkUser("Benjamin","2"))
-    user.removeUser("Michael")
+    print(user.addUser("Michael","123Fiona","User","['AU','AU']"))
+ #   user.filesOfUser('.','EN')
+ #   print(user.checkUser("Benjamin","2"))
+ #   user.removeUser("Michael")
 
    # rules = RuleController()
    # rules.initRules()
