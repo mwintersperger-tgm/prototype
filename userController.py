@@ -132,8 +132,7 @@ class UserController:
         """
         file_names = [fn for fn in os.listdir(directory)
                       if "data"+CC in fn]
-        print(file_names)
-        return "bla"
+        return file_names
 
     def fileLength(self):
         """
