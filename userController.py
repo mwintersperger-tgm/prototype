@@ -19,9 +19,8 @@ class UserController:
         :return: A message depending on success or failure
         """
         filelen = self.fileLength()
-        # Get a list of usernames and check if the name of the new user is unique, return a failure message if it is not
-        users = self.listUsernames(filelen)
-        if name in users:
+        # Check if the list of CCs doesn't contain multiples of the same and that the name of the user is unique.
+        if self.uniqueCC(filelen, CC) == False or self.uniqueUsernames(filelen, name) == False:
             return "failure"
         curline = 0
         with open("user.json", "r") as of:
@@ -44,22 +43,25 @@ class UserController:
         # Return a success message if everything worked
         return "success"
 
-    def listUsernames(self,filelen):
+    def uniqueUsernames(self,filelen, nname):
         """
         This method returns a list of usernames
         :param filelen:
         :type int
         :return: list of usernames
         """
-        users = []
+        names = []
         with open("user.json", "r") as of:
             line = of.readline()
             for i in range(0, filelen-2):
                 line = of.readline()
                 name = line[line.find(':')+2:line.find(',')-1]
-                users.append(name)
-        return users
+                names.append(name)
+        return nname in names
 
+    def uniqueCC(self,filelen, ccs):
+        seen = set()
+        return not any(i in seen or seen.add(i) for i in ccs)
 
     def removeUser(self,name):
         """
@@ -111,14 +113,14 @@ class UserController:
                 name,scrap = list[1].split(",")
                 pwd, scrap = list[2].split(",")
                 type, scrap = list[3].split(",")
-                CC = list[4].rstrip("}")
+                CC = list[4].rstrip("},")
                 names.append(name.strip('"'))
                 passwords.append(pwd.strip('"'))
                 types.append(type.strip('"'))
                 CCs.append(CC.strip('"'))
         for i in range(0,len(passwords)):
             if names[i] == username and passwords[i] == password:
-                return '{"name":"%s", "pswd":"%s", "type":"%s", "cc":"%s"}' % (names[i], passwords[i], types[i], CCs[i])
+                return '{"name":"%s", "type":"%s", "cc":"%s"}' % (names[i], types[i], CCs[i])
         return "failure"
 
     def filesOfUser(self,directory,CC):
@@ -130,8 +132,7 @@ class UserController:
         """
         file_names = [fn for fn in os.listdir(directory)
                       if "data"+CC in fn]
-        print(file_names)
-        return "bla"
+        return file_names
 
     def fileLength(self):
         """
