@@ -23,7 +23,7 @@ def test():
                 print(err)
     print("File to export:\n" + str(tmp))
     print("Length of file to export:" + str(len(tmp)))
-    ExportCls.exportExcel(tmp)
+    ExportCls.exportexcel(tmp)
     ExportCls.exportCSV(tmp, "../resources/data/test.csv")
 
 

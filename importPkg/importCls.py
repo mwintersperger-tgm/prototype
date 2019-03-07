@@ -2,11 +2,16 @@ import csv
 import json
 import os
 import exportPkg.merge as Merge
-
 import pandas
 
 
 def forward(dataset, file):
+    """
+    writes a new line of data to the output file
+    :param dataset:
+    :param file:
+    :return:
+    """
     with open(file, "a") as outfile:
         try:
             outfile.write(json.dumps(dataset) + ",\n")
@@ -19,7 +24,7 @@ def forward(dataset, file):
 
 def start_file(file, countrycode=0, lockedrows=list()):
     """
-
+    writes the first line of the data file
     :param file:
     :param countrycode:
     :param lockedrows:
@@ -101,6 +106,11 @@ def end_file(file):
 
 
 def importcsv2(args):
+    """
+    legacy method, isn't usable with mappings and country codes
+    :param args:
+    :return:
+    """
     cfg = {}
     try:
         with open("../resources/inconfig.json") as file:
@@ -231,7 +241,7 @@ def importxlsxmerge(infile, outfile, keyset):
     """
     Does the same as the other xlsx import, but with the slight difference that it assumes that there's already a JSON
     structure at the outfile location. I recommend checking if a file exists at the "outfile" location and then use
-    either this method or importxlsx
+    either this method or importxlsx.
     :param infile:
     :param outfile:
     :param keyset:

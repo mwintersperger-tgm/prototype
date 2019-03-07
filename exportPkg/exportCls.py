@@ -13,7 +13,7 @@ def fetch(dataset):
     pass
 
 
-def exportExcel(data, outfile):
+def exportexcel(data, outfile):
     """
     Exports the given data, which should be a list of dictionaries (expect errors if it isn't one)
     as an excel file. The first row will feature the row names as bold text, all other rows will
