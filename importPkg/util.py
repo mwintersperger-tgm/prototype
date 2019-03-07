@@ -16,7 +16,6 @@ def parsefirstline(line):
 
 def fetchtablenames(folder):
     onlyfiles = os.listdir(folder)
-    print(onlyfiles)
     output = list()
     for x in onlyfiles:
         lastnumindex = -1
@@ -28,8 +27,18 @@ def fetchtablenames(folder):
             output.append(x[lastnumindex+1:x.index('.')])
     return output
 
+def fetchfilenames(folder):
+    onlyfiles = os.listdir(folder)
+    for x in onlyfiles:
+        if x.index('.json') < 0: onlyfiles.remove(x)
+    return onlyfiles
 
 def fetchtnameforfile(filename):
+    '''
+
+    :param filename:
+    :return:
+    '''
     lastnumindex = -1
     for i in range(0, len(filename)):
         char = ord(list(filename)[i])
