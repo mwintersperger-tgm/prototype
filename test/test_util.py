@@ -20,5 +20,12 @@ def resource():
 
 
 def test_fetchtablenames(resource):
-    print(Util.fetchtablenames(resource + "\\tmp"))
-    assert True
+    assert Util.fetchtablenames(resource + "\\tmp") == ['kappa', 'helloworld', 'sample']
+
+
+def test_fetchdatafilenames(resource):
+    assert Util.fetchdatafilenames(resource + "\\tmp") == ['data1234kappa.json', 'data23456helloworld.json', 'data345678sample.json']
+
+
+def test_fetchnameforfile():
+    assert Util.fetchtnameforfile('data1234kappa.json') == 'kappa'
