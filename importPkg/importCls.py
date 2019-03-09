@@ -22,17 +22,18 @@ def forward(dataset, file):
     pass
 
 
-def start_file(file, countrycode=0, lockedrows=list()):
+def start_file(file, countrycode=0, lockedrows=list(), displayname="Sample Table"):
     """
     writes the first line of the data file
     :param file:
     :param countrycode:
     :param lockedrows:
+    :param displayname:
     :return:
     """
     with open(file, "w") as outfile:
         outfile.truncate(0)
-        outfile.write('{"rules":"", "cc":"' + str(countrycode) + '", "locked":' + json.dumps(lockedrows) + ', "values":[\n')
+        outfile.write('{"rules":"", "cc":"' + str(countrycode) + '", "locked":' + json.dumps(lockedrows) + ', "tablename":"' + displayname + '", "values":[\n')
 
 
 def validatemapping(mapping):
@@ -150,7 +151,7 @@ def importcsv2(args):
         print(str(count) + " lines imported")
 
 
-def importcsv(infile, outfile, delim, mappingname=None, countrycode=0):
+def importcsv(infile, outfile, delim, mappingname=None, countrycode=0, displayname = "Sample Table"):
     """
     Imports the infile (CSV) into a JSON structure that should be usable for the rest of the project.
     The JSON will be saved in the outfile.
@@ -162,6 +163,7 @@ def importcsv(infile, outfile, delim, mappingname=None, countrycode=0):
     :param delim:
     :param mappingname:
     :param countrycode:
+    :param displayname:
     :return:
     """
     with open(infile) as file:
@@ -173,7 +175,7 @@ def importcsv(infile, outfile, delim, mappingname=None, countrycode=0):
         if mapping is not None:
             locked = mapping['__locked__']
             mapping.pop('__locked__')
-        start_file(outfile, countrycode, locked)
+        start_file(outfile, countrycode, locked, displayname)
         colnames = []
         read = csv.reader(file, delimiter=delim)
         count = 0
