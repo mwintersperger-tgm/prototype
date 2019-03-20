@@ -1,7 +1,7 @@
 import json
 import csv
 from pandas import DataFrame
-
+import importPkg.util as util
 
 def fetch(dataset):
     """
@@ -83,7 +83,7 @@ def exportcsvfromfile(source, filename):
             sauce.readline()
             try:
                 while True:
-                    x = sauce.readline()
+                    x = util.parseline(sauce.readline())
                     if firstset:
                         w.writerow(x.keys())
                         firstset = False
