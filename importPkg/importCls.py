@@ -15,8 +15,9 @@ def forward(dataset, file):
     with open(file, "a") as outfile:
         try:
             for x in dataset.keys():
-                if isinstance(dataset[x], str):
-                    dataset[x] = dataset[x].strip()
+                s = dataset[x]
+                if isinstance(s, str):
+                    dataset[x] = s.replace('"', "''").strip()
             outfile.write(json.dumps(dataset) + ",\n")
             outfile.close()
             print(json.dumps(dataset))
