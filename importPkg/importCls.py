@@ -3,7 +3,7 @@ import json
 import os
 import exportPkg.merge as Merge
 import pandas
-
+import importPkg.util as util
 
 def forward(dataset, file):
     """
@@ -208,16 +208,19 @@ def importcsv(infile, outfile, delim, mappingname=None, countrycode=0, displayna
         print(str(count) + " lines imported")
 
 
-def importxlsx(infile, outfile):
+def importxlsx(infile, outfile, countrycode=0, displayname = "Sample Table", lockedrows=[]):
     """
     imports data from an .xlsx and adapts it into the internally used JSON structure. Due to the way pandas internally
     works, this isn't particularly memory conserving
     :param infile:
     :param outfile:
+    :param countrycode
+    :param displayname
+    :param lockedrows
     :return:
     """
     newfile = pandas.ExcelFile(infile)
-    file = pandas.read_excel(open(infile, 'rb'), sheet_name=newfile.sheet_names[0])
+    file = pandas.read_excel(open(infile, 'r'), sheet_name=newfile.sheet_names[0])
     data = file.to_dict()
     print('\n' + str(data))
     keys = data.keys()
@@ -237,7 +240,7 @@ def importxlsx(infile, outfile):
             obj[y]['validated'] = False
         arr.append(obj)
     print(arr)
-    start_file(outfile)
+    start_file(outfile, countrycode, lockedrows, displayname)
     for x in arr:
         forward(x, outfile)
     end_file(outfile)
@@ -263,8 +266,8 @@ def importxlsxmerge(infile, outfile, keyset):
         keyslength = data[x].keys()
         break
     length = len(keyslength)
-    print(length)
-    print(keys)
+    # print(length)
+    # print(keys)
     arr = list()
     for num in range(0, length):
         obj = dict()
@@ -277,17 +280,10 @@ def importxlsxmerge(infile, outfile, keyset):
     prevarr = list()
     with open(outfile) as file:
         string = file.readline()
-        obj = json.loads(string + ']}')
-        locked = obj['locked']
-        cc = obj['cc']
+        obj = util.parsefirstline(string)
         try:
             while True:
-                x = file.readline()
-                if x[len(x) - 2] == ',':
-                    obj = json.loads(x[:-2])
-                else:
-                    obj = json.loads(x)
-                prevarr.append(obj)
+                prevarr.append(util.parseline(file.readline()))
         except Exception as err:
             print(err)
     for x in prevarr:
@@ -299,7 +295,7 @@ def importxlsxmerge(infile, outfile, keyset):
                 break
         if not align:
             arr.append(x)
-    start_file(outfile, cc, locked)
+    start_file(outfile, obj['cc'], obj['locked'], obj['tablename'])
     for x in arr:
         forward(x, outfile)
     end_file(outfile)

@@ -48,13 +48,20 @@ def exportcsv(data, filename):
     :param filename: location of the file
     :return:
     """
+    delimiter = ';'
+    with open('../resources/outconfig.json') as file:
+        try:
+            conf = json.loads(file.read())
+            delimiter = conf['delimiter']
+        except Exception as err:
+            print(err)
     firstset = True
     print("Exporting as CSV")
     print(len(data))
     print(filename)
     with open(filename, "a") as file:
         file.truncate(0)
-        w = csv.writer(file, delimiter="|")
+        w = csv.writer(file, delimiter=delimiter)
         for x in data:
             if firstset:
                 w.writerow(x.keys())

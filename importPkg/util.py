@@ -5,6 +5,7 @@ import os
 def parseline(line):
     """
     Returns the proviced line of a data.json file as a string in the form of a dict.
+    Throws an error if it's the first line, last line or an unrelated string that can't be parsed.
     :param line:
     :return:
     """
@@ -17,7 +18,7 @@ def parseline(line):
 def parsefirstline(line):
     """
     Returns the first line of a data.json file as a dict.
-    The first line as a string should be provided as a parameter.
+    The first line of a data.json file as a string should be provided as a parameter.
     :param line:
     :return:
     """
