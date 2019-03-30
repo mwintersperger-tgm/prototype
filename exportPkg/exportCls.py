@@ -20,7 +20,7 @@ def fetch(infile):
     # TODO: receive data to export
 
 
-def exportexcel(data, outfile):
+def exportexcel(data, outfile, tablename='test'):
     """
     Exports the given data, which should be a list of dictionaries (expect errors if it isn't one)
     as an excel file. The first row will feature the row names as bold text, all other rows will
@@ -44,7 +44,7 @@ def exportexcel(data, outfile):
 
     print(tmp)
     frame = DataFrame(tmp)
-    frame.to_excel(outfile, sheet_name="test", index=False)
+    frame.to_excel(outfile, sheet_name=tablename, index=False)
 
 
 def exportcsv(data, outfile):
