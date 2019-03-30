@@ -151,7 +151,7 @@ def getkeygroup(objects, keyset):
 
 def groupbykeys(objects, keysets):
     """
-    creates a json structure:
+    creates a json structure like this
     [
         {
             "key": {},

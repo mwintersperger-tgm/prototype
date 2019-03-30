@@ -194,7 +194,7 @@ def importcsv(infile, outfile, delim, mappingname=None, countrycode=0, displayna
                 res = {}
                 if row:
                     for x in range(0, len(temp)):
-                        if mappingname is not None:
+                        if mapping is not None:
                             res[mapping[colnames[0][x]]] = {}
                             res[mapping[colnames[0][x]]]["value"] = temp[x]
                             res[mapping[colnames[0][x]]]["validated"] = False
@@ -208,7 +208,7 @@ def importcsv(infile, outfile, delim, mappingname=None, countrycode=0, displayna
         print(str(count) + " lines imported")
 
 
-def importxlsx(infile, outfile, countrycode=0, displayname = "Sample Table", lockedrows=[], ruleset=""):
+def importxlsx(infile, outfile, mappingname=None, countrycode=0, displayname = "Sample Table", ruleset=""):
     """
     imports data from an .xlsx and adapts it into the internally used JSON structure. Due to the way pandas internally
     works, this isn't particularly memory conserving
@@ -219,6 +219,14 @@ def importxlsx(infile, outfile, countrycode=0, displayname = "Sample Table", loc
     :param lockedrows
     :return:
     """
+    if mappingname is not None:
+        mapping = loadmapping(mappingname)
+    else:
+        mapping = None
+    lockedrows = list()
+    if mapping is not None:
+        lockedrows = mapping['__locked__']
+        mapping.pop('__locked__')
     newfile = pandas.ExcelFile(infile)
     file = pandas.read_excel(open(infile, 'r'), sheet_name=newfile.sheet_names[0])
     data = file.to_dict()
