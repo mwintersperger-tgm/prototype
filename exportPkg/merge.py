@@ -187,7 +187,7 @@ def finalmerge(gbkobjects):
     """
     expects the output from groupbykeys as a parameter to initiate the final merge.
     made obsolete by the less memory consuming getkeygroup + mergelinerisky
-    method used in finalmerge since gbk may eats too much memory
+    method used in memconservingmerge since gbk may eat too much memory
     :param gbkobjects:
     :return:
     """

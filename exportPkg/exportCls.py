@@ -3,14 +3,21 @@ import csv
 from pandas import DataFrame
 import importPkg.util as util
 
-def fetch(dataset):
+
+def fetch(infile):
     """
-    I don't know where this is going or how I plan to receive data
-    :param dataset:
+    Return the ''values'' array for one data.json
+    :param infile:
     :return:
     """
+    try:
+        with open(infile, "r") as sauce:
+            obj = json.loads(sauce.read())
+            return obj['values']
+    except Exception as err:
+        print(err)
+        return None
     # TODO: receive data to export
-    pass
 
 
 def exportexcel(data, outfile):
@@ -40,12 +47,12 @@ def exportexcel(data, outfile):
     frame.to_excel(outfile, sheet_name="test", index=False)
 
 
-def exportcsv(data, filename):
+def exportcsv(data, outfile):
     """
     Exports the given data, which should be a list of dictionaries (expect errors if it isn't one)
     as a CSV file. First row includes the column names, all others include values
     :param data: list of dicts
-    :param filename: location of the file
+    :param outfile: location of the file
     :return:
     """
     delimiter = ';'
@@ -58,8 +65,8 @@ def exportcsv(data, filename):
     firstset = True
     print("Exporting as CSV")
     print(len(data))
-    print(filename)
-    with open(filename, "a") as file:
+    print(outfile)
+    with open(outfile, "a") as file:
         file.truncate(0)
         w = csv.writer(file, delimiter=delimiter)
         for x in data:
@@ -73,20 +80,27 @@ def exportcsv(data, filename):
             w.writerow(arr)
 
 
-def exportcsvfromfile(source, filename):
+def exportcsvfromfile(source, outfile):
     """
     Exports the given data, which should be a list of dictionaries (expect errors if it isn't one)
     as a CSV file. First row includes the column names, all others include values
     :param source: json file created by import
-    :param filename: location of the file
+    :param outfile: location of the file
     :return:
     """
+    delimiter = ';'
+    with open('../resources/outconfig.json') as file:
+        try:
+            conf = json.loads(file.read())
+            delimiter = conf['delimiter']
+        except Exception as err:
+            print(err)
     firstset = True
     print("Exporting as CSV")
     with open(source, 'r') as sauce:
-        with open(filename, "a") as file:
+        with open(outfile, "a") as file:
             file.truncate(0)
-            w = csv.writer(file, delimiter="|")
+            w = csv.writer(file, delimiter=delimiter)
             sauce.readline()
             try:
                 while True:
