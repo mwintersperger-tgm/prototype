@@ -26,7 +26,7 @@ def forward(dataset, file):
     pass
 
 
-def start_file(file, countrycode=0, lockedrows=list(), displayname="Sample Table"):
+def start_file(file, countrycode=0, lockedrows=list(), displayname="Sample Table", ruleset=""):
     """
     writes the first line of the data file
     :param file:
@@ -37,7 +37,7 @@ def start_file(file, countrycode=0, lockedrows=list(), displayname="Sample Table
     """
     with open(file, "w") as outfile:
         outfile.truncate(0)
-        outfile.write('{"rules":"", "cc":"' + str(countrycode) + '", "locked":' + json.dumps(lockedrows) + ', "tablename":"' + displayname + '", "values":[\n')
+        outfile.write('{"rules":"' + str(ruleset) + '", "cc":"' + str(countrycode) + '", "locked":' + json.dumps(lockedrows) + ', "tablename":"' + displayname + '", "values":[\n')
 
 
 def validatemapping(mapping):
@@ -155,7 +155,7 @@ def importcsv2(args):
         print(str(count) + " lines imported")
 
 
-def importcsv(infile, outfile, delim, mappingname=None, countrycode=0, displayname = "Sample Table"):
+def importcsv(infile, outfile, delim, mappingname=None, countrycode=0, displayname = "Sample Table", ruleset=""):
     """
     Imports the infile (CSV) into a JSON structure that should be usable for the rest of the project.
     The JSON will be saved in the outfile.
@@ -179,7 +179,7 @@ def importcsv(infile, outfile, delim, mappingname=None, countrycode=0, displayna
         if mapping is not None:
             locked = mapping['__locked__']
             mapping.pop('__locked__')
-        start_file(outfile, countrycode, locked, displayname)
+        start_file(outfile, countrycode, locked, displayname, ruleset)
         colnames = []
         read = csv.reader(file, delimiter=delim)
         count = 0
@@ -208,7 +208,7 @@ def importcsv(infile, outfile, delim, mappingname=None, countrycode=0, displayna
         print(str(count) + " lines imported")
 
 
-def importxlsx(infile, outfile, countrycode=0, displayname = "Sample Table", lockedrows=[]):
+def importxlsx(infile, outfile, countrycode=0, displayname = "Sample Table", lockedrows=[], ruleset=""):
     """
     imports data from an .xlsx and adapts it into the internally used JSON structure. Due to the way pandas internally
     works, this isn't particularly memory conserving
@@ -240,7 +240,7 @@ def importxlsx(infile, outfile, countrycode=0, displayname = "Sample Table", loc
             obj[y]['validated'] = False
         arr.append(obj)
     print(arr)
-    start_file(outfile, countrycode, lockedrows, displayname)
+    start_file(outfile, countrycode, lockedrows, displayname, ruleset)
     for x in arr:
         forward(x, outfile)
     end_file(outfile)
@@ -295,7 +295,7 @@ def importxlsxmerge(infile, outfile, keyset):
                 break
         if not align:
             arr.append(x)
-    start_file(outfile, obj['cc'], obj['locked'], obj['tablename'])
+    start_file(outfile, obj['cc'], obj['locked'], obj['tablename'], obj['rules'])
     for x in arr:
         forward(x, outfile)
     end_file(outfile)
