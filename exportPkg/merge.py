@@ -1,6 +1,7 @@
 import json
 import os
-import  importPkg.util as util
+import importPkg.util as util
+import importPkg.importCls as importCls
 
 
 def keysonly(obj, keyset):
@@ -198,6 +199,12 @@ def finalmerge(gbkobjects):
 
 
 def fullmerge(objects, keyset):
+    """
+    Counterpart to memconservingmerge
+    :param objects:
+    :param keyset:
+    :return:
+    """
     tmp = gatherkeys(objects, keyset)
     out = []
     for x in tmp:
@@ -206,7 +213,46 @@ def fullmerge(objects, keyset):
     return out
 
 
+def fullmergefiles(filepaths, keyset, outfile):
+    """
+    Counterpart to memconservingmerge. Doesn't care about memory usage at all, but is significantly faster since
+    it only reads each file once and keeps all the values in the RAM.
+    :param objects:
+    :param keyset:
+    :return:
+    """
+    objects = list()
+    for filepath in filepaths:
+        with open(filepath, "r") as file:
+            file.readline()
+            try:
+                while True:
+                    objects.append(util.parseline(file.readline()))
+            except Exception as err:
+                print(err)
+                pass
+    tmp = gatherkeys(objects, keyset)
+    out = []
+    for x in tmp:
+        tmp2 = getkeygroup(objects, x)
+        out.append(mergelinerisky(tmp2))
+    importCls.start_file(outfile)
+    for x in out:
+        importCls.forward(x, outfile)
+    importCls.end_file(outfile)
+
+
 def memconservingmerge(filepaths, keyset, outfile):
+    """
+    Takes all available keyset combinations from all files, then merges them into one.
+    For this function memory usage was a more important criteria than speed, therefore it doesn't load all
+    files into memory at the same time, meaning they need to be accessed and read multiple times to guarantee
+    the intended results.
+    :param filepaths:
+    :param keyset:
+    :param outfile:
+    :return:
+    """
     key = list()
     for filepath in filepaths:
         with open(filepath, "r") as file:
@@ -223,8 +269,7 @@ def memconservingmerge(filepaths, keyset, outfile):
                 print(err)
                 pass
     print('Final Keys: ' + str(key) + '; length: ' + str(len(key)))
-    with open(outfile, "a") as file:
-        file.write('{"rules":"", "values":[\n')
+    importCls.start_file(outfile)
     for k in key:
         tempobj = k
         for filepath in filepaths:
@@ -232,11 +277,7 @@ def memconservingmerge(filepaths, keyset, outfile):
                 file.readline()
                 try:
                     while True:
-                        s = file.readline()
-                        if s[len(s) - 2] == ',':
-                            obj = json.loads(s[:-2])
-                        else:
-                            obj = json.loads(s)
+                        obj = util.parseline(file.readline())
                         for x in obj.keys():
                             obj[x] = obj[x]['value']
                         if keyalign(k, obj, keyset):
@@ -245,11 +286,9 @@ def memconservingmerge(filepaths, keyset, outfile):
                     pass
         print('outobj: ' + str(tempobj))
         try:
-            with open(outfile, "a") as file:
-                file.write(json.dumps(tempobj)+',\n')
+            importCls.forward(tempobj, outfile)
         except Exception as err:
             pass
     with open(outfile, "a") as file:
-        file.truncate(os.path.getsize(outfile) - 3)
-        file.write('\n]}')
+        importCls.end_file(outfile)
 

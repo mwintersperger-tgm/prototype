@@ -5,6 +5,7 @@ import exportPkg.merge as Merge
 import pandas
 import importPkg.util as util
 
+
 def forward(dataset, file):
     """
     writes a new line of data to the output file
@@ -37,7 +38,7 @@ def start_file(file, countrycode=0, lockedrows=list(), displayname="Sample Table
     """
     with open(file, "w") as outfile:
         outfile.truncate(0)
-        outfile.write('{"rules":"' + str(ruleset) + '", "cc":"' + str(countrycode) + '", "locked":' + json.dumps(lockedrows) + ', "tablename":"' + displayname + '", "values":[\n')
+        outfile.write('{"rules":"' + str(ruleset) + '", "cc":"' + str(countrycode) + '", "locked":' + json.dumps(lockedrows) + ', "tablename":"' + displayname + '", "values":[ \n')
 
 
 def validatemapping(mapping):
