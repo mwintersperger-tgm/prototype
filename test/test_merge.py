@@ -4,7 +4,8 @@ import pytest
 import os
 import shutil
 import importPkg.generate as generateFile
-import copy
+import importPkg.util as util
+
 
 @pytest.fixture()
 def testobj():
@@ -297,11 +298,7 @@ def testmemconservingmerge():
         file.readline()
         try:
             while True:
-                s = file.readline()
-                if s[len(s) - 2] == ',':
-                    obj = json.loads(s[:-2])
-                else:
-                    obj = json.loads(s)
+                obj = util.parseline(file.readline())
                 res.append(obj)
         except Exception as err:
             print('test 299: ' + str(err))
@@ -309,7 +306,10 @@ def testmemconservingmerge():
     print('length: ' + str(len(tmp)) + '; source list: ' + str(tmp))
     exists = True
     for x in tmp:
-        if x not in res:
+        y = dict()
+        y['value'] = x
+        y['validated'] = True
+        if y not in res:
             exists = False
     shutil.rmtree(os.path.dirname(os.path.abspath(__file__)) + "\\tmp")
     assert exists
