@@ -180,7 +180,6 @@ def groupbykeys(objects, keysets):
         for y in array:
             if keyalign(x, y['key'], y['key'].keys()):
                 y['values'].append(x)
-
     return array
 
 
