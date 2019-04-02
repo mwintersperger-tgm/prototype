@@ -237,12 +237,7 @@ def fullmergefiles(filepaths, keyset, outfile):
         out.append(mergelinerisky(tmp2))
     importCls.start_file(outfile)
     for x in out:
-        y = dict()
-        for z in x.keys():
-            y[z] = dict()
-            y[z]['value'] = x[z]
-            y[z]['validated'] = True
-        importCls.forward(y, outfile)
+        importCls.forward(x, outfile)
     importCls.end_file(outfile)
 
 
