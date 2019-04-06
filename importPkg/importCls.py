@@ -244,9 +244,10 @@ def importxlsx(infile, outfile, mappingname=None, countrycode=0, displayname = "
     for num in range(0, length):
         obj = dict()
         for y in keys:
-            obj[y] = dict()
-            obj[y]['value'] = data[y][num]
-            obj[y]['validated'] = False
+            z = y.strip()
+            obj[z] = dict()
+            obj[z]['value'] = data[z][num]
+            obj[z]['validated'] = False
         arr.append(obj)
     print(arr)
     start_file(outfile, countrycode, lockedrows, displayname, ruleset)
@@ -281,9 +282,10 @@ def importxlsxmerge(infile, outfile, keyset):
     for num in range(0, length):
         obj = dict()
         for y in keys:
-            obj[y] = dict()
-            obj[y]['value'] = data[y][num]
-            obj[y]['validated'] = False
+            z = y.strip()
+            obj[z] = dict()
+            obj[z]['value'] = data[z][num]
+            obj[z]['validated'] = False
         arr.append(obj)
     print(arr)
     prevarr = list()
