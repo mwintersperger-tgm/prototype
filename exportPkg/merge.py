@@ -135,7 +135,7 @@ def gatherkeysallownone(objects, keyset):
     return array
 
 
-def getkeygroup(objects, keyset):
+def getkeygroup(objects, key):
     """
     returns a list filled with all objects with the given keyset.
     :param objects: list
@@ -144,7 +144,7 @@ def getkeygroup(objects, keyset):
     """
     array = []
     for x in objects:
-        if keyalign(x, keyset, keyset.keys()):
+        if keyalign(x, key, key.keys()):
             array.append(x)
 
     return array
